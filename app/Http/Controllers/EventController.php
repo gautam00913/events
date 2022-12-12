@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Models\Event;
+use App\Pipes\Events\Search;
 use Illuminate\Http\Request;
+use Illuminate\Pipeline\Pipeline;
 
 class EventController extends Controller
 {
@@ -17,12 +19,16 @@ class EventController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $events= Event::where('starts_at', '>=', now())
-                      ->with(['user', 'tags'])
+        $events= app(Pipeline::class)->send(Event::where('starts_at', '>=', now())
+        ->with(['user', 'tags']))
+        ->through([
+            Search::class,
+        ])->thenReturn()
                       ->orderBy('starts_at')
                       ->get();
+      
         return view('events.index', compact('events'));
     }
 

@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-purple-700 border-b border-purple-100 text-white">
+<nav x-data="{ open: false }" class="bg-transparent shadow-lg text-white border-b-2 border-purple-900">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -12,19 +12,20 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    @guest
-                        <x-nav-link class="text-white bg-purple-600" :href="route('events.index')" :active="request()->routeIs('events.index')">
+                        <x-nav-link class="text-white" :href="route('events.index')" :active="request()->routeIs('events.index')">
                             {{ __('Evènements') }}
                         </x-nav-link>
-                        <x-nav-link class="text-white bg-purple-600" :href="route('events.create')" :active="request()->routeIs('events.create')">
+                        <x-nav-link class="text-white" :href="route('events.create')" :active="request()->routeIs('events.create')">
                             {{ __('Ajouter un évènement') }}
                         </x-nav-link>
-                    @else
-                        <x-nav-link class="text-white bg-purple-600" :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    @auth
+                        <x-nav-link class="text-white" :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                             {{ __('Dashboard') }}
                         </x-nav-link>
-                    @endguest
-
+                    @endauth
+                    <form action="" method="get">
+                        <x-input name="search" type="search" placeholder="Recherchez ..." class="rounded-full mt-3 self-center text-purple-700 placeholder:text-yellow-600" />
+                    </form>
                 </div>
             </div>
 

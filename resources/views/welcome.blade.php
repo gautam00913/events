@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <h2 class="peer font-semibold text-xl text-white hover:text-yellow-500 leading-tight">
             {{ __('Evènements en cours avant'). ' '. now()->addMonth(3)->translatedFormat('M Y') }}
         </h2>
+        <p class="w-1/2 border border-yellow-300 peer-hover:w-full"></p>
     </x-slot>
 
     <section>
@@ -12,6 +13,9 @@
                     @foreach ( $events as $event )
                         <x-event :event="$event" />
                     @endforeach 
+                </div>
+                <div class="mt-4 text-white">
+                    {{ $events->links() }}
                 </div>
             @else
                 <div class="text-center">

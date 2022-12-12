@@ -11,8 +11,14 @@
                     @endforeach 
                 </div>
             @else
-                <div class="text-center">
-                    Pas d'évènement disponible
+                <div class="justify-center shadow-lg h-64 flex items-center flex-col">
+                    <p>
+
+                        Pas  d'évènement disponible
+                    </p>
+                    <p class="mt-4">
+                        <x-link href="{{ route('events.index') }}">Afficher tous les évènements</x-link>
+                    </p>
                 </div>
             @endif
         </div>
