@@ -1,6 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        Liste des évènements
+        <h2 class="peer font-semibold text-xl text-white hover:text-yellow-500 leading-tight">
+            Liste des évènements
+        </h2>
+        <p class="w-1/2 border border-yellow-300 peer-hover:w-full"></p>
     </x-slot>
     <section>
         <div class="px-5 md:px-20 py-10">

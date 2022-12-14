@@ -3,7 +3,7 @@
         <h2 class="peer font-semibold text-xl text-white hover:text-yellow-500 leading-tight">
             {{ __('Evènements en cours avant'). ' '. now()->addMonth(3)->translatedFormat('M Y') }}
         </h2>
-        <p class="w-1/2 border border-yellow-300 peer-hover:w-full"></p>
+        <p class="w-1/2 border border-yellow-300 peer-hover:w-full transition ease-in-out delay-700"></p>
     </x-slot>
 
     <section>

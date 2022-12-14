@@ -25,4 +25,9 @@ class Event extends Model
     {
         return $this->belongsToMany(Tag::class);
     }
+
+    public function tickets(): BelongsToMany
+    {
+        return $this->belongsToMany(Ticket::class)->withPivot(['price', 'total_place', 'remaining_place']);
+    }
 }

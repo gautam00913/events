@@ -1,4 +1,4 @@
-<div class="{{ $event->premium ? 'bg-yellow-100' : 'bg-white' }} rounded-lg shadow-md hover:shadow-xl p-3">
+<div class="{{ $event->premium ? 'bg-yellow-600' : 'bg-white' }} rounded-lg shadow-md hover:shadow-xl p-3">
     <div class="flex space-x-5">
         <div class="flex space-x-3 flex-start">
             <div class="leading-none">

@@ -1,3 +1,3 @@
-<div {{ $attributes->merge(['class' => 'text-purple-800 font-bold italic text-lg hover:text-purple-400']) }}>
+<div {{ $attributes->merge(['class' => 'text-yellow-500 hover:text-white font-bold italic text-lg']) }}>
     E-events
 </div>

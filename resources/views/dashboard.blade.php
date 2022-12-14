@@ -1,8 +1,9 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Dashboard') }}
+        <h2 class="peer font-semibold text-xl text-white hover:text-yellow-500 leading-tight">
+            Tableau de Bord
         </h2>
+        <p class="w-1/2 border border-yellow-300 peer-hover:w-full"></p>
     </x-slot>
 
     <div class="py-12">
