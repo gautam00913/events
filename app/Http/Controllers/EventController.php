@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Tag;
 use App\Models\Event;
+use App\Models\Ticket;
 use App\Pipes\Events\Search;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
@@ -39,7 +40,8 @@ class EventController extends Controller
      */
     public function create()
     {
-       return view('events.create');
+        $tickets = Ticket::all();
+       return view('events.create', compact('tickets'));
     }
 
     /**
@@ -54,9 +56,10 @@ class EventController extends Controller
         'title' => 'required|string|min:10|max:100',
         'content' => 'required|string',
         'starts_at' => 'required|date',
-        'ends_at' => 'required|date',
+        'ends_at' => 'sometimes|date',
         'tags' => 'sometimes|string',
        ]);
+       dd($request);
        $user = auth()->user();
        $event= $user->events()->create([
         'title' => $request->title,

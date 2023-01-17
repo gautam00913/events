@@ -1,5 +1,8 @@
-<div class="{{ $event->premium ? 'bg-yellow-600' : 'bg-white' }} rounded-lg shadow-md hover:shadow-xl p-3">
-    <div class="flex space-x-5">
+<div class="{{ $event->premium ? 'bg-yellow-600' : 'bg-white' }} rounded-lg shadow-md hover:shadow-xl">
+    <div>
+        <img src="{{ asset('images/default.png') }}" alt="default image">
+    </div>
+    <div class="flex space-x-5 p-3 mt-3">
         <div class="flex space-x-3 flex-start">
             <div class="leading-none">
                 <p class="text-gray-500 pb-2 mb-2 border-b border-gray-200">{{ $event->starts_at->translatedFormat('M') }}</p>
@@ -21,7 +24,7 @@
                 {{ $event->content }}
             </div>
             <a class="inline-flex items-center "href="#">
-                <img src="https://th.bing.com/th/id/OIF.B8K6TPe1WeyJKZZKCx1oPg?w=185&h=185&c=7&r=0&o=5&pid=1.7" class="w-8 h-8 rounded-full object-center object-cover flex-shrink-0" alt="...">
+                <img src="{{ asset('/images/avatar.png') }}" class="w-8 h-8 rounded-full object-center object-cover flex-shrink-0" alt="...">
                 <span class="flex flex-grow flex-col pl-6">
                     <span class="title-font font-medium text-gray-900 italic">
                         {{ $event->user->name }}

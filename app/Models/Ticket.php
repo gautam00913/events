@@ -10,6 +10,8 @@ class Ticket extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['name'];
+    
     public function events(): BelongsToMany
     {
         return $this->belongsToMany(Event::class)->withPivot(['price', 'total_place', 'remaining_place']);
