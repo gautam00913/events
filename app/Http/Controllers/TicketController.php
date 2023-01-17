@@ -32,4 +32,9 @@ class TicketController extends Controller
         
 
     }
+
+    public function create(Request $request)
+    {
+        return view('events.ticket', ['i' => $request->query('id')]);
+    }
 }

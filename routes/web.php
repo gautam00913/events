@@ -20,6 +20,7 @@ Route::get('/',[StaticPageController::class, 'home'])->name('home');
 
 Route::resource('events', EventController::class);
 Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
+Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
