@@ -18,8 +18,11 @@
                     {{ $events->links() }}
                 </div>
             @else
-                <div class="text-center">
-                    <p>
+                <div class="text-center bg-white py-5">
+                    <p class="text-4xl animate-bounce">
+                        📆
+                    </p>
+                    <p class="my-4 text-yellow-600">
                         Pas d'évènement disponible avant les trois prochains mois.
                     </p>
                     <p>

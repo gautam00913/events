@@ -8,7 +8,7 @@
     <section class="container mx-auto pt-4 pb-10">
         <div class="bg-white rounded-lg px-3 md:px-10 py-10 w-4/5 md:w-1/2 mx-auto">
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
-            <form action="{{ route('events.store') }}" method="POST" id="addEventForm">
+            <form action="{{ route('events.store') }}" method="POST" id="addEventForm" enctype="multipart/form-data">
                 @csrf
                     <div class="my-3">
                         <x-label  for="title" >

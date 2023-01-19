@@ -23,12 +23,12 @@ class EventController extends Controller
     public function index(Request $request)
     {
         $events= app(Pipeline::class)->send(Event::where('starts_at', '>=', now())
-        ->with(['user', 'tags']))
+        ->with(['user', 'tags', 'tickets']))
         ->through([
             Search::class,
         ])->thenReturn()
                       ->orderBy('starts_at')
-                      ->get();
+                      ->paginate(9);
       
         return view('events.index', compact('events'));
     }
@@ -56,10 +56,17 @@ class EventController extends Controller
         'title' => 'required|string|min:10|max:100',
         'content' => 'required|string',
         'starts_at' => 'required|date',
-        'ends_at' => 'sometimes|date',
-        'tags' => 'sometimes|string',
+        'ends_at' => 'nullable|date',
+        'tags' => 'nullable|string',
+        'image' => 'nullable|image',
        ]);
-       dd($request);
+     
+       $image = null;
+      // dd($request->image, $_FILES['image']);
+       if($request->image)
+       {
+            $image = $request->image->store('public/flyers');
+       }
        $user = auth()->user();
        $event= $user->events()->create([
         'title' => $request->title,
@@ -68,7 +75,18 @@ class EventController extends Controller
         'premium' => $request->filled('premium'),
         'starts_at' => $request->starts_at,
         'ends_at' => $request->ends_at,
+        'image' => $image,
        ]);
+       for($i = 0; $i< count($request->ticket_name); $i++)
+       {
+            $event->tickets()->attach($request->ticket_name[$i],
+            [
+                'price' => $request->ticket_price[$i],
+                'total_place' => $request->ticket_place[$i],
+                'remaining_place' => $request->ticket_place[$i],
+            ]
+        );
+       }
        $tags= explode(',', $request->tags);
        foreach ($tags as $key => $inputTag) {
         $inputTag= trim($inputTag);
@@ -80,7 +98,7 @@ class EventController extends Controller
 
         $event->tags()->attach($tag->id);
        }
-       return redirect()->route('events.index');
+       return redirect()->route('events.index')->with('success', "Evènement créé avec succès");
     }
 
     /**

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->text('content');
             $table->boolean('premium')->default(false);
             $table->timestamp('starts_at');
-            $table->timestamp('ends_at');
+            $table->timestamp('ends_at')->nullable();
             $table->timestamps();
 
             $table->foreignIdFor(User::class);

@@ -143,6 +143,7 @@ return [
         // 'store'  => 'redis',
     ],
 
+    'devise' => env('DEVISE', 'F CFA'),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

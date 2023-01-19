@@ -24,6 +24,7 @@ class EventFactory extends Factory
             'premium' => $this->faker->boolean(25),
             'starts_at' => $this->faker->dateTimeBetween('now', '+2 months'),
             'ends_at' => $this->faker->dateTimeBetween('+3 months', '+4 months'),
+            'image' => $this->faker->image(),
         ];
     }
 }

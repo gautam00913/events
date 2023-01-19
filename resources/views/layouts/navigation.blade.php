@@ -1,4 +1,4 @@
-<nav x-data="{ open: false }" class="bg-transparent shadow-lg text-white border-b-2 border-purple-900">
+<nav x-data="{ open: false, openForm: false }" class="bg-transparent shadow-lg text-white border-b-2 border-purple-900">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -34,7 +34,7 @@
                     @auth
                     <x-dropdown align="right" width="48">
                         <x-slot name="trigger">
-                            <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                            <button class="flex items-center text-sm font-medium text-white hover:text-yellow-500 hover:border-yellow-300 focus:outline-none focus:text-yellow-500 focus:border-yellow-300 transition duration-150 ease-in-out">
                                 <div>{{ Auth::user()->name }}</div>
 
                                 <div class="ml-1">
@@ -68,20 +68,34 @@
                     @endauth
                 </div>
 
-            <!-- Hamburger -->
-            <div class="-mr-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
+            <div class="flex">
+                <!-- Search form -->
+                <form style="display: none;" action="" method="get" x-show="openForm">
+                    <x-input @click.away="openForm= false" name="search" type="search" placeholder="Recherchez ..." class="rounded-full mt-3 self-center text-purple-700 placeholder:text-yellow-600" />
+                </form>
+                <div class="mr-2 flex items-center sm:hidden" x-show="!openForm">
+                    <button @click="openForm = true" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                          </svg>
+                          
+                    </button>
+                </div>
+                <!-- Hamburger -->
+                <div class="-mr-2 flex items-center sm:hidden">
+                    <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div style="display: none;" @click.outside="open= false" x-show="open" class="bg-purple-700 sm:hidden fixed top-0 w-3/4 min-h-screen left-0 shadow-lg">
+    <div style="display: none;" @click.outside="open= false" x-show="open" class="bg-purple-700 sm:hidden fixed top-0 w-3/4 min-h-screen left-0 shadow-lg z-50">
         <div class="pt-2 pb-3 space-y-1">
             <div class="flex items-center px-3 py-2  border-b border-gray-200">
                 <a href="{{ route('home') }}">

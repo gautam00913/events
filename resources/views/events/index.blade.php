@@ -13,15 +13,22 @@
                         <x-event :event="$event" />
                     @endforeach 
                 </div>
+                <div class="mt-4 text-white">
+                    {{ $events->links() }}
+                </div>
             @else
-                <div class="justify-center shadow-lg h-64 flex items-center flex-col">
+                <div class="justify-center shadow-lg h-64 flex items-center flex-col bg-white">
+                    <p class="text-4xl animate-bounce">
+                        📆
+                    </p>
                     <p>
-
                         Pas  d'évènement disponible
                     </p>
-                    <p class="mt-4">
-                        <x-link href="{{ route('events.index') }}">Afficher tous les évènements</x-link>
-                    </p>
+                    @if (Request::query('search'))
+                        <p class="mt-4">
+                            <x-link href="{{ route('events.index') }}">Afficher tous les évènements</x-link>
+                        </p>
+                    @endif
                 </div>
             @endif
         </div>
