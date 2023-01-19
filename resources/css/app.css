@@ -5,3 +5,8 @@
 .bo{
     border: 1px solid red;
 }
+*[disabled]{
+pointer-events: none;
+background: gray;
+color: white;
+}
