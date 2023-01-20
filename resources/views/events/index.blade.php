@@ -8,7 +8,7 @@
     <section>
         <div class="px-5 md:px-20 py-10">
             @if ($events->count())
-                <div class="grid md:grid-cols-3 md:gap-10 gap-5">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 md:gap-10 gap-5">
                     @foreach ( $events as $event )
                         <x-event :event="$event" />
                     @endforeach 

@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+        <title>{{ config('app.name', 'Laravel') }}@isset($title) | {{ $title }} @endisset</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -28,7 +28,37 @@
                 {{ $slot }}
             </main>
         </div>
+        
 
+   <!-- Main modal -->
+   <div id="modalEl" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
+    <div class="relative w-full h-full max-w-2xl md:h-auto">
+        <!-- Modal content -->
+        <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+            <!-- Modal header -->
+            <div class="flex items-start justify-between p-4 border-b rounded-t dark:border-gray-600">
+                <h3 class="text-xl font-semibold text-gray-900 dark:text-white" id="modalTitle">
+                  ...
+                </h3>
+                <button type="button" class="closeModal text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>  
+                </button>
+
+            </div>
+            <!-- Modal body -->
+            <div class="p-6 space-y-6" id="modalContent">
+               
+            </div>
+            <!-- Modal footer -->
+            <div id="modalFooter" class="invisible flex items-center justify-end p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
+                <x-button data-modal-hide="myModal" type="button">I accept</x-button>
+                <button data-modal-hide="myModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
+            </div>
+        </div>
+    </div>
+</div>
+ 
+          
         <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
         <script>
             $.ajaxSetup({
@@ -38,6 +68,11 @@
             })
          
             $(document).ready(function(){
+                const modal = new Modal(document.getElementById('modalEl'));
+
+                        $(document).on('click', '.closeModal', function(){
+                                modal.hide();                            
+                        });
                         $(document).on('click', '.addTicketBtn', function(){
                             $('#addTicketModal').removeClass('hidden');
                             let id = $(this).data('id');
@@ -96,6 +131,27 @@
 
                         }
                     }
+                })
+
+                //buy ticket
+                $('.buyTicket').click(function(e){
+                    let info = $(this).siblings('.event_tickets').html()
+                    let flyers = e.target.parentElement.parentElement.querySelector('img.flyers').src
+                    const div = document.createElement('div')
+                    const img = document.createElement('img')
+                    div.className="grid md:grid-cols-2 gap-4 md:gap-6 px-3"
+                    img.className="object-center object-cover w-full h-full rounded-lg border border-white"
+                    img.src = flyers
+                    div.appendChild(img)
+                    div.innerHTML += `
+                        <form>
+                            ${info}
+                            <x-button class="w-full my-3 justify-center">Acheter</x-button>
+                        </form>
+                    `
+                    $('#modalTitle').html("Achat de billet d'évènement")
+                    $('#modalContent').html(div)
+                    modal.show();
                 })
             });
         </script>
