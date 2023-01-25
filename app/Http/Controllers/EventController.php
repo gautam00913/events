@@ -98,7 +98,10 @@ class EventController extends Controller
 
         $event->tags()->attach($tag->id);
        }
-       return redirect()->route('events.index')->with('success', "Evènement créé avec succès");
+       return redirect()->route('events.index')->with('toast', [
+                                                        'type' => 'success',
+                                                        'message' => "Evènement créé avec succès"
+                                                    ]);
     }
 
     /**

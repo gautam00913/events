@@ -1,4 +1,4 @@
-<div class="{{ $event->premium ? 'bg-blue-200' : 'bg-white' }} rounded-lg shadow-md hover:shadow-xl">
+<div class="{{ $event->premium ? 'bg-blue-200' : 'bg-white' }} rounded-lg shadow-md hover:shadow-2xl transition ease-linear delay-300 hover:shadow-yellow-500">
     <div class="h-full flex flex-col justify-between ">
         <div>
             <div class="relative">
@@ -8,10 +8,17 @@
                     <img src="{{ asset('images/default.png') }}" class="flyers h-64 object-center object-cover w-full" alt="default image">
                 @endif
                 <p class="bg-yellow-500 px-2 py-1 rounded absolute top-1 left-1">
-                    Billet à parti de 
-                    {{ $event->tickets->min(function($ticket){
-                        return $ticket->pivot->price;
-                    }).' '. config('app.devise')}}
+                    @php 
+                        $min_ticket = $event->tickets->min(function($ticket){
+                            return $ticket->pivot->price;
+                        }); 
+                    @endphp
+                    @if ($min_ticket == 0 && $event->tickets->count() == 1)
+                        Evènement gratuit
+                    @else
+                        Billet à parti de 
+                        {{ number_format($min_ticket, 2, '.', ' ') .' '. config('app.devise')}}
+                    @endif
                 </p>
             </div>
             <div class="grid grid-flow-row-dense grid-cols-12 mt-3 px-3">
@@ -33,10 +40,12 @@
                             {{ $tag->name }}{{ $loop->last ? '': ',' }}
                         @endforeach
                     </h3>
-                    <h2 class="text-lg md:text-xl font-bold text-gray-700 title-font mb-3">{{ $event->title }}</h2>
-                    <div class="leading-relaxed mb-5">
-                        {{ $event->content }}
-                    </div>
+                </div>
+            </div>
+            <div class="p-4">
+                <h2 class="text-lg md:text-xl font-bold text-gray-700 title-font mb-3 event_title" id="{{ $event->id }}">{{ $event->title }}</h2>
+                <div class="leading-relaxed mb-5">
+                    {{ $event->content }}
                 </div>
             </div>
         </div>
@@ -80,10 +89,15 @@
                     </div>
                 @endif
                 @foreach ($event->tickets as $ticket)
+                    <x-input type="hidden" class="ticket_prices" :value="$ticket->pivot->price" ></x-input>
                     <div class="flex items-center mb-3 space-x-4">
-                            <x-input type="checkbox" name="tickets[]" :value="$ticket->pivot->id" id="ticket_{{ $ticket->pivot->id }}"></x-input>
+                            <x-input type="checkbox" name="tickets[]" :value="$ticket->pivot->id" id="ticket_{{ $ticket->pivot->id }}" :checked="$loop->first"></x-input>
                             <x-label :value="$ticket->name" for="ticket_{{ $ticket->pivot->id }}"/>
-                            <p>{{ number_format($ticket->pivot->price, 2, '.', ' ') }}</p>
+                            <p class="text-purple-600">{{ number_format($ticket->pivot->price, 2, '.', ' '). ' '. config('app.devise') }}</p>
+                    </div>
+                    <div class="mb-3 @if(!$loop->last) border-b pb-3 @endif">
+                        <x-label value="Nombre de place" for="number_place_ticket_{{ $ticket->pivot->id }}"/>
+                            <x-input min="1" :value="1" name="number_places[]" type="number" id="number_place_ticket_{{ $ticket->pivot->id }}"/>
                     </div>
                 @endforeach
             </div>

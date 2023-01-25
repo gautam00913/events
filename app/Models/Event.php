@@ -30,4 +30,9 @@ class Event extends Model
     {
         return $this->belongsToMany(Ticket::class)->withPivot(['id','price', 'total_place', 'remaining_place']);
     }
+
+    public function participants(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class)->using(EventUser::class);
+    }
 }

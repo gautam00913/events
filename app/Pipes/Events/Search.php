@@ -2,7 +2,9 @@
 
 namespace App\Pipes\Events;
 
+use App\Models\Tag;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
 class Search
 {
@@ -14,6 +16,11 @@ class Search
             return $query->where('title', "like", "%{$search}%")
                         ->orWhere('content', 'like', "%{$search}%")
                         ->orWhere('slug', 'like', "%{$search}%")
+                        ->orWhereIn('id', DB::table('event_tag')->select('event_id')
+                                            ->whereIn('tag_id', Tag::select('id')
+                                                                ->where('name', 'like', "%{$search}%")
+                                        )
+                        )
                         ->orWhereIn('user_id', $users_id);
         });
         return $next($query);

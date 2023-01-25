@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
+        <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-purple-900">
@@ -22,7 +23,9 @@
                     {{ $header }}
                 </div>
             </header>
-
+            <x-toast :message="session()->has('toast') ? session()->get('toast')['message'] : ''"
+                :type="session()->has('toast') ? session()->get('toast')['type'] : 'success'">
+            </x-toast>
             <!-- Page Content -->
             <main>
                 {{ $slot }}
@@ -137,6 +140,7 @@
                 $('.buyTicket').click(function(e){
                     let info = $(this).siblings('.event_tickets').html()
                     let flyers = e.target.parentElement.parentElement.querySelector('img.flyers').src
+                    const event = e.target.parentElement.parentElement.querySelector('h2.event_title')
                     const div = document.createElement('div')
                     const img = document.createElement('img')
                     div.className="grid md:grid-cols-2 gap-4 md:gap-6 px-3"
@@ -145,14 +149,77 @@
                     div.appendChild(img)
                     div.innerHTML += `
                         <form>
+                            <div id="error" class="hidden text-red-500 italic mb-3 bg-red-200 px-2 py-1 rounded"></div>
+                            <input type="hidden" name="event_name" value="${event.textContent}" />
+                            <input type="hidden" name="event_id" value="${event.id}" />
                             ${info}
-                            <x-button class="w-full my-3 justify-center">Acheter</x-button>
+                            <x-button class="w-full my-3 justify-center" type="button" id="buyEventTicket">Acheter</x-button>
                         </form>
                     `
-                    $('#modalTitle').html("Achat de billet d'évènement")
+                    $('#modalTitle').html("Achat de billets pour l'évènement <span class='font-semibold text-purple-700'>"+ event.textContent + '</span>')
                     $('#modalContent').html(div)
                     modal.show();
                 })
+                $(document).on('click', '#buyEventTicket', function(e){
+                    e.preventDefault()
+                    const ticket_prices = document.querySelectorAll('form .ticket_prices')
+                    const ticket_numbers = document.querySelectorAll('form input[name="number_places\[\]"]')
+                    const tickets = document.querySelectorAll('form input[name="tickets\[\]"]:checked')
+                    const event_name = document.querySelector('form input[name="event_name"]').value
+                    const event_id = document.querySelector('form input[name="event_id"]').value
+                    const error = document.getElementById('error')
+                    let price = 0, tickets_id = [], tickets_place = []
+                    if (tickets.length === 0) {
+                        error.classList.remove('hidden')
+                        error.textContent = "Veillez cocher au moins une case";
+                        setTimeout(() => {
+                            error.classList.add('hidden')
+                            error.textContent =''
+                        }, 3000);
+                    } else {
+                        let isValid = true
+                        tickets.forEach(function(ticket_id, index){
+                            const qty = Number(ticket_numbers[index].value)
+                            if (qty >= 1) {
+                                const amount = Number(ticket_prices[index].value)
+                                price += (amount * qty)
+                                tickets_id.push(ticket_id.value)
+                                tickets_place.push(qty)  
+                            } else {
+                                isValid = false;
+                                return;
+                            }
+                            
+                        })
+                        if (!isValid) {
+                            error.classList.remove('hidden')
+                            error.textContent = "Veillez renseigner le nombre de place pour chaque billet";
+                            setTimeout(() => {
+                                error.classList.add('hidden')
+                                error.textContent =''
+                            }, 3000);
+                        } else {
+                            let widget =  FedaPay.init({
+                                public_key: 'pk_sandbox_GVYrmawmN6UDU4Y0YVCLTeQi',
+                                transaction:{
+                                    amount: price,
+                                    description: "Achat de billets pour l'évènement "+ event_name
+                                },
+                                onComplete: function(data){
+                                    if(data.reason === "CHECKOUT COMPLETE" && data.transaction.status === 'approved'){
+                                        window.location = "{{ route('tickets.buy') }}?event_id="+ event_id +"&payment_id="+ data.transaction.id +"&tickets_id="+ JSON.stringify(tickets_id) + "&tickets_place=" + JSON.stringify(tickets_place)
+                                    }else{
+                                        console.log(data);
+                                    }
+                                }
+                            });
+                            widget.open();
+                        }
+                    }
+                })
+              //toast
+                $('#toast').delay(5000).hide('slow')
+                $('#closeToast').on('click', () => $('#toast').hide())
             });
         </script>
     </body>

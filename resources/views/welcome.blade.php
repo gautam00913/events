@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot:title>Plateforme de billeterie d'évènement en ligne.</x-slot:title>
     <x-slot name="header">
         <h2 class="peer font-semibold text-xl text-white hover:text-yellow-500 leading-tight">
             {{ __('Evènements en cours avant'). ' '. now()->addMonth(3)->translatedFormat('M Y') }}
