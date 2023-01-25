@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\UpdatingUserController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\StaticPageController;
 use App\Http\Controllers\TicketController;
@@ -22,10 +23,10 @@ Route::resource('events', EventController::class);
 Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
 Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
 Route::middleware(['auth'])->group(function(){
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [StaticPageController::class, 'dashboard'])->name('dashboard');
     Route::get('tickets/buy', [TicketController::class, 'buy'])->name('tickets.buy');
+    Route::get('user/edit', [UpdatingUserController::class, 'edit'])->name('edit');
+    Route::put('user/{user}update', [UpdatingUserController::class, 'update'])->name('update');
 });
 
 require __DIR__.'/auth.php';

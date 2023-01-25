@@ -23,7 +23,7 @@
                             {{ __('Dashboard') }}
                         </x-nav-link>
                     @endauth
-                    <form action="" method="get">
+                    <form @if(!Route::is('home')) action="{{ route('events.index') }}" @endif method="get">
                         <x-input name="search" type="search" placeholder="Recherchez ..." class="rounded-full mt-3 self-center text-purple-700 placeholder:text-yellow-600" />
                     </form>
                 </div>
@@ -46,16 +46,19 @@
                         </x-slot>
 
                         <x-slot name="content">
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
+                            <div class="divide-y">
+                                <x-dropdown-link :href="route('dashboard')">Dashboard</x-dropdown-link>
+                                <!-- Authentication -->
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
 
-                                <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                    this.closest('form').submit();">
-                                    {{ __('Déconnexion') }}
-                                </x-dropdown-link>
-                            </form>
+                                    <x-dropdown-link :href="route('logout')"
+                                            onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
+                                        {{ __('Déconnexion') }}
+                                    </x-dropdown-link>
+                                </form>
+                           </div>
                         </x-slot>
                     </x-dropdown>
                     @else
@@ -68,10 +71,10 @@
                     @endauth
                 </div>
 
-            <div class="flex sm:hidden">
+            <div class="flex sm:hidden pl-3">
                 <!-- Search form -->
-                <form style="display: none;" action="" method="get" x-show="openForm">
-                    <x-input @click.away="openForm= false" name="search" type="search" placeholder="Recherchez ..." class="rounded-full mt-3 self-center text-purple-700 placeholder:text-yellow-600" />
+                <form style="display: none;"  @if(!Route::is('home')) action="{{ route('events.index') }}" @endif method="get" x-show="openForm">
+                    <x-input @click.away="openForm= false" name="search" type="search" placeholder="Recherchez ..." class="rounded-full mt-3 self-center text-purple-700 placeholder:text-yellow-600 w-11/12" />
                 </form>
                 <div class="mr-2 flex items-center sm:hidden" x-show="!openForm">
                     <button @click="openForm = true" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">

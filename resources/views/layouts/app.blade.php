@@ -220,6 +220,36 @@
               //toast
                 $('#toast').delay(5000).hide('slow')
                 $('#closeToast').on('click', () => $('#toast').hide())
+
+                //edit user info
+                $('#editUser').on('click', () => {
+                    $.get("{{ route('edit') }}", response => {
+                        $('#modalTitle').html("Vos informations personnelles")
+                        $('#modalContent').html(response)
+                        modal.show();   
+                    })
+                })
+                $(document).on('submit', '#editUserForm', function(e) {
+                    e.preventDefault();
+                    const data = new FormData(this)
+                    axios.post(this.action, data)
+                        .then(response => {
+                            if (response.data.user) {
+                                window.location = ""
+                            }
+                        })
+                        .catch(error => {
+                            const errors = Object.entries(error.response.data.errors)
+                            errors.forEach((element) => {
+                                [key, message] = element
+                                document.getElementById(key).classList.add('border-red-600')
+                                document.getElementById(key).insertAdjacentHTML('afterend', `
+                                <p class="text-red-600 italic">${message[0]}</p>
+                                `)
+                            })
+                        })
+               
+                });
             });
         </script>
     </body>

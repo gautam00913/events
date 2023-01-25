@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Event;
 use App\Pipes\Events\Search;
 use Illuminate\Http\Request;
@@ -26,5 +27,12 @@ class StaticPageController extends Controller
         ->paginate(6);
 
         return view('welcome', compact('events'));
+    }
+
+    public function dashboard()
+    {
+        $user = User::withCount(['events', 'participations'])
+                ->find(auth()->user()->id);
+        return view('dashboard', ['user' => $user]);
     }
 }
