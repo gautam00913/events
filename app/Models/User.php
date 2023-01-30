@@ -22,6 +22,8 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'image',
+        'phone',
     ];
 
     /**
@@ -50,6 +52,6 @@ class User extends Authenticatable
 
     public function participations(): BelongsToMany
     {
-        return $this->belongsToMany(Event::class)->using(EventUser::class);
+        return $this->belongsToMany(Event::class)->using(EventUser::class)->withPivot(['event_ticket_id', 'number_place', 'total_amount', 'reserve_at', 'payment_id']);
     }
 }

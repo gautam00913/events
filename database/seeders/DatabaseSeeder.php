@@ -21,12 +21,14 @@ class DatabaseSeeder extends Seeder
                 'user_id' => $user->id
             ])->each(function($event) use($tags, $tickets){
                 $event->tags()->attach($tags->random(3));
-                $place = rand(10, 100);
-                $event->tickets()->attach($tickets->random(2), [
-                    'price' => rand(0, 20000),
-                    'total_place' => $place,
-                    'remaining_place' => $place
-                ]);
+                $tickets->random(2)->each(function($ticket) use($event){
+                    $place = rand(10, 100);
+                    $ticket->events()->attach($event->id,[
+                        'price' => rand(0, 20000),
+                        'total_place' => $place,
+                        'remaining_place' => $place
+                    ]);
+                });
             });
          });
 

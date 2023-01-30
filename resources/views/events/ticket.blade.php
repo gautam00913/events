@@ -6,7 +6,10 @@
             </x-label>
            <div class="flex-1 flex">
             <x-select id="ticket_name_{{ $i }}" name="ticket_name[]" class="flex-1 rounded-md rounded-r-none border-r-0 tickets_option" required>
-                ${select.innerHTML}
+                <option value="" selected>--- Choisir ---</option>
+                @foreach ($tickets as $ticket)
+                    <option value="{{ $ticket->id }}" >{{ $ticket->name }}</option>
+                @endforeach
             </x-select>
             <button data-id="ticket_name_{{ $i }}" type="button" class="text-black border rounded-l-none rounded-md border-gray-300 addTicketBtn">
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

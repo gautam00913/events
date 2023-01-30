@@ -1,20 +1,31 @@
 <x-app-layout>
+    @section('int-tel-phone')
+    <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css"
+    />    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    @endsection
     <x-slot name="header">
         <h2 class="peer font-semibold text-xl text-white hover:text-yellow-500 leading-tight">
             Tableau de Bord
         </h2>
         <p class="w-1/2 border border-yellow-300 peer-hover:w-full"></p>
     </x-slot>
-
-    <div>
+   
+  <div>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg pb-10">
                 <div class="p-6 bg-white border-b border-gray-200">
                     <div class="grid md:grid-cols-3 gap-4">
                         <x-card class="flex flex-col justify-between">
                             <div class="flex space-x-3">
-                                <div class="h-20 w-20 rounded-full p-2 border border-purple-600 group-hover:border-yellow-200">
-                                    <img src="{{ asset('/images/avatar.png') }}" alt="default avatar" />
+                                <div class="h-20 w-20 rounded-full p-1 border border-purple-600 group-hover:border-yellow-200">
+                                    @if ($user->image)
+                                        <img src="{{ Storage::url($user->image) }}" alt="Avatar de {{ $user->name }}" class="w-full h-full rounded-full object-center" />
+                                    @else
+                                        <img src="{{ asset('images/avatar.png') }}" alt="default avatar" />
+                                    @endif
                                 </div>
                                 <div>
                                     <h2 class="text-lg font-semibold mb-2 group-hover:text-white">
@@ -38,7 +49,7 @@
                             <p class="text-center group-hover:text-white mb-3">
                                 Evènement(s) créé(s) <span class="text-yellow-500 group-hover:text-yellow-300 group-hover:font-bold">( {{ $user->events_count }} )</span>
                             </p>
-                            <x-button type="button" class="w-full justify-center" id="eventsHistory">Historique</x-button>
+                            <x-link :href="route('events.created')" class="w-full justify-center" id="eventsHistory">Historique</x-link>
                         </x-card>
                         <x-card class="flex flex-col justify-between">
                             <p class="text-center text-4xl mb-3">

@@ -36,9 +36,19 @@ class UpdatingUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'password' => ['nullable', 'confirmed', Rules\Password::defaults()],
+            'imqge' => ['nullable', 'image', 'size:3000'],
+            'phone' => ['nullable', 'string', 'regex:/^\+[0-9 ]{10,}$/']
         ]);
         $tab1 = [];
+        $path = null;
         if($request->password) $tab1 = ['password' => Hash::make($request->password)];
+        if($request->image)
+        {
+            $path = $request->image->store('public/avatars');
+            $tab1['image'] = $path;
+        }
+        if($request->phone) $tab1['phone'] = $request->phone;
+        
         $user->update(array_merge(
             [
                 'name' => $request->name

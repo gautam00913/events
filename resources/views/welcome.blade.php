@@ -27,7 +27,7 @@
                         Pas d'évènement disponible avant les trois prochains mois.
                     </p>
                     <p>
-                        <x-link>Voir tous les évènements</x-link>
+                        <x-link :href="route('events.index')">Voir tous les évènements</x-link>
                     </p>
                 </div>
             @endif

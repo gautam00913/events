@@ -19,14 +19,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/',[StaticPageController::class, 'home'])->name('home');
 
-Route::resource('events', EventController::class);
 Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
 Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
 Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', [StaticPageController::class, 'dashboard'])->name('dashboard');
     Route::get('tickets/buy', [TicketController::class, 'buy'])->name('tickets.buy');
     Route::get('user/edit', [UpdatingUserController::class, 'edit'])->name('edit');
-    Route::put('user/{user}update', [UpdatingUserController::class, 'update'])->name('update');
+    Route::put('user/{user}/update', [UpdatingUserController::class, 'update'])->name('update');
+    Route::get('events/participations', [EventController::class, 'participations'])->name('events.participations');
+    Route::get('dashboard/events', [EventController::class, 'created'])->name('events.created');
 });
 
 require __DIR__.'/auth.php';
+Route::resource('events', EventController::class);

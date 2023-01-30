@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventRequest;
 use App\Models\Tag;
+use App\Models\User;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Pipes\Events\Search;
@@ -50,17 +52,8 @@ class EventController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EventRequest $request)
     {
-       $request->validate([
-        'title' => 'required|string|min:10|max:100',
-        'content' => 'required|string',
-        'starts_at' => 'required|date',
-        'ends_at' => 'nullable|date',
-        'tags' => 'nullable|string',
-        'image' => 'nullable|image',
-       ]);
-     
        $image = null;
       // dd($request->image, $_FILES['image']);
        if($request->image)
@@ -123,7 +116,8 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
-        //
+        $tickets = Ticket::all();
+        return view('events.edit', compact('event', 'tickets'));
     }
 
     /**
@@ -133,9 +127,61 @@ class EventController extends Controller
      * @param  \App\Models\Event  $event
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Event $event)
+    public function update(EventRequest $request, Event $event)
     {
-        //
+        $image = null;
+        $tab = [];
+       if($request->image)
+       {
+            $image = $request->image->store('public/flyers');
+            $tab['image'] = $image;
+       }
+        $event->update([
+            'title' => $request->title,
+            'content' => $request->content,
+            'slug' => str($request->title)->slug(),
+            'premium' => $request->filled('premium'),
+            'starts_at' => $request->starts_at,
+            'ends_at' => $request->ends_at,
+           ] + $tab 
+        );
+       $tickets = $event->tickets;
+       $tickets_id = $tickets->pluck('id');
+
+       for($i = 0; $i< count($request->ticket_name); $i++)
+       {
+            if ($tickets_id->contains($request->ticket_name[$i])) {
+                $event->tickets()->updateExistingPivot($request->ticket_name[$i],[
+                        'price' => $request->ticket_price[$i],
+                        'total_place' => $request->ticket_place[$i],
+                        'remaining_place' => $tickets->get($i)->pivot->remaining_place + ($request->ticket_place[$i] - $tickets->get($i)->pivot->total_place),
+                ]);
+            } else {
+                $event->tickets()->attach($request->ticket_name[$i],[
+                    'price' => $request->ticket_price[$i],
+                    'total_place' => $request->ticket_place[$i],
+                    'remaining_place' => $request->ticket_place[$i],
+                ]);
+            }
+        
+       }
+       $tags= explode(',', $request->tags);
+       $event_tags = [];
+       foreach ($tags as $key => $inputTag) {
+        $inputTag= trim($inputTag);
+        $tag= Tag::firstOrCreate([
+            'slug' => str($inputTag)->slug()
+        ],[
+            'name' => $inputTag
+        ]);
+        $event_tags[]= $tag->id;
+    }
+    $event->tags()->sync($event_tags);
+       $request->session()->flash('toast', [
+                                                        'type' => 'success',
+                                                        'message' => "Evènement $event->title modifié avec succès"
+                                                    ]);
+        return response()->json(['updated' => 1]);
     }
 
     /**
@@ -146,6 +192,23 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
-        //
+        $event->delete();
+        return back()->with('toast', [
+            'type' => 'success',
+            'message' => "Evènement supprimé avec succès"
+        ]);
+    }
+
+    public function participations()
+    {
+        return view('events.participated', [
+            'participations' => auth()->user()->participations
+        ]);
+    }
+    public function created()
+    {
+        return view('events.created', [
+            'events' => auth()->user()->events()->with(['tags', 'tickets'])->paginate(9)
+        ]);
     }
 }

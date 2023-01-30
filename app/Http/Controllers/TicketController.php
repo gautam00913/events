@@ -37,7 +37,7 @@ class TicketController extends Controller
 
     public function create(Request $request)
     {
-        return view('events.ticket', ['i' => $request->query('id')]);
+        return view('events.ticket', ['i' => $request->query('id'), 'tickets' => Ticket::all()]);
     }
 
     public function buy(Request $request)
@@ -55,20 +55,14 @@ class TicketController extends Controller
         {
             $place = intval($tickets_place[$key]);
             $user = auth()->user();
-
-            DB::table('event_user')->insert([
-                'event_id' => $event->id,
-                'user_id' => $user->id,
-            ]);
-
-            DB::table('event_users')->insert([
-                'ticket_id' => $ticket->pivot->id,
+            $user->participations()->attach($event->id, [
+                'event_ticket_id' => $ticket->pivot->id,
                 'number_place' => $place,
                 'total_amount' => $ticket->pivot->price * $place,
                 'reserve_at' => now(),
                 'payment_id' => $request->payment_id
             ]);
-          
+         
             DB::table('event_ticket')
                 ->where('id', $ticket->pivot->id)
                 ->update([

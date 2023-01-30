@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="text-center">
-            <a class="inline-flex items-center"href="#">
+            <a class="inline-flex items-center" href="?search={{ $event->user->name }}">
                 <img src="{{ asset('/images/avatar.png') }}" class="w-8 h-8 rounded-full object-center object-cover flex-shrink-0" alt="...">
                 <span class="flex flex-grow flex-col pl-6">
                     <span class="title-font font-medium text-gray-900 italic">

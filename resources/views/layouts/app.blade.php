@@ -12,6 +12,7 @@
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
+        @yield('int-tel-phone')
     </head>
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-purple-900">
@@ -35,7 +36,7 @@
 
    <!-- Main modal -->
    <div id="modalEl" tabindex="-1" aria-hidden="true" class="fixed top-0 left-0 right-0 z-50 hidden w-full p-4 overflow-x-hidden overflow-y-auto md:inset-0 h-modal md:h-full">
-    <div class="relative w-full h-full max-w-2xl md:h-auto">
+    <div class="relative w-full h-full max-w-2xl md:max-w-4xl">
         <!-- Modal content -->
         <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
             <!-- Modal header -->
@@ -59,6 +60,15 @@
             </div>
         </div>
     </div>
+
+</div>
+<div id="confirmationModal" class="hidden w-full fixed min-h-screen top-0 left-0 z-50 bg-transparent" style="transition: opacity .15s linear; outline: 0;">
+    <div class="relative top-5 w-11/12 md:w-1/2 mx-auto bg-white rounded-md px-3 py-2 shadow-2xl h-3/4 bg-clip-padding border border-gray-400 mb-3">
+       
+        <div id="confirmMessage">
+           
+        </div>
+    </div>
 </div>
  
           
@@ -71,6 +81,7 @@
             })
          
             $(document).ready(function(){
+                let phoneInput = null;
                 const modal = new Modal(document.getElementById('modalEl'));
 
                         $(document).on('click', '.closeModal', function(){
@@ -82,7 +93,7 @@
                             $('#select_option').val(id)
                             
                         });
-                $('#AddTicket').click(function(){
+                $(document).on('click', '#AddTicket', function(){
                     let name = $('#add_ticket_name').val();
                     let id = $('#select_option').val()
                     if (name != '') {
@@ -102,13 +113,11 @@
                     }
                 });
 
-                $('#ticket_number').on('input',()=>{
+                $(document).on('input', '#ticket_number',()=>{
                     const tickets = document.querySelectorAll('fieldset')
-                    const select = document.querySelector('#ticket_name_1')
                     let ticket_number = $('#ticket_number').val()
                     const reference = document.querySelector('.btn_create'),
                     form = document.getElementById('addEventForm')
-
                     if (tickets.length > ticket_number) {
                         if (ticket_number > 1) {
                             for(let i=tickets.length; i>ticket_number; i--){
@@ -226,12 +235,33 @@
                     $.get("{{ route('edit') }}", response => {
                         $('#modalTitle').html("Vos informations personnelles")
                         $('#modalContent').html(response)
-                        modal.show();   
+                        modal.show(); 
+                        phoneInput = window.intlTelInput(document.querySelector("#phone"), {
+                            initialCountry: "auto",
+                            geoIpLookup: function(success, failure) {
+                                $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+                                var countryCode = (resp && resp.country) ? resp.country : "us";
+                                success(countryCode);
+                                });
+                            },
+                            utilsScript:
+                                "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+                        });  
                     })
                 })
+                //events participations History
+                $('#participationsHistory').on('click', () => {
+                    $.get("{{ route('events.participations') }}", response => {
+                        $('#modalTitle').html("Vos Billets d'évènements achetés")
+                        $('#modalContent').html(response)
+                        modal.show(); 
+                    })
+                })
+
                 $(document).on('submit', '#editUserForm', function(e) {
                     e.preventDefault();
                     const data = new FormData(this)
+                    data.set('phone', phoneInput.getNumber())
                     axios.post(this.action, data)
                         .then(response => {
                             if (response.data.user) {
@@ -247,9 +277,63 @@
                                 <p class="text-red-600 italic">${message[0]}</p>
                                 `)
                             })
-                        })
+                    })
                
                 });
+                //edit event
+                $(document).on('click', '.editEvent', function(){
+                    $.get($(this).data('url'), response => {
+                        $('#modalTitle').html("Modification de l'évènement")
+                        $('#modalContent').html(response)
+                        modal.show(); 
+                    })
+                })
+                //Update event
+                $(document).on('click', '#updateEvent', function(e){
+                    e.preventDefault()
+                    const form = e.target.parentElement.parentElement
+                    const data = new FormData(form)
+                    axios.post(form.action, data)
+                    .then( response => {
+                        if (response.data.updated) {
+                                window.location = ""
+                            }
+                    })
+                    .catch(error => {
+                        const errors = Object.entries(error.response.data.errors)
+                        console.log(errors);
+                            errors.forEach((element) => {
+                                [key, message] = element
+                                document.getElementById(key).classList.add('border-red-600')
+                                document.getElementById(key).insertAdjacentHTML('afterend', `
+                                <p class="text-red-600 italic">${message[0]}</p>
+                                `)
+                            })
+                    })
+                });
+                //delete event
+                $(document).on('click', '.deleteEvent', function(){
+                    const form = `
+                        <form action="${$(this).data('url')}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <p>Souhaitez-vous vraiment supprimer l'évènement <span class="font-bold">${$(this).data('name')}</span> ?</p>
+                            <div class="flex items-center justify-between my-3">
+                                <x-button type="button" id="cancelConfim">Annuler</x-button>
+                                <x-button type="submit" class="bg-red-600">Supprimer</x-button>
+                            </div>
+                        </form>
+                    `
+                   $('#confirmMessage').html(form)
+                   $('#confirmationModal').removeClass('hidden')
+                })
+        
+                //close confirmation modal
+                $(document).on('click', '#cancelConfim', function(e){
+                    e.preventDefault()
+                    $('#confirmMessage').html('')
+                   $('#confirmationModal').addClass('hidden')
+                })
             });
         </script>
     </body>

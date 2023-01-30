@@ -16,6 +16,13 @@ return new class extends Migration
         Schema::create('event_user', function (Blueprint $table) {
             $table->foreignId('event_id')->constrained();
             $table->foreignId('user_id')->constrained();
+            $table->unsignedBigInteger('event_ticket_id');
+            $table->integer('number_place');
+            $table->integer('total_amount');
+            $table->timestamp('reserve_at');
+            $table->string('payment_id')->unique();
+
+            $table->foreign('event_ticket_id')->references('id')->on('event_ticket');
         });
     }
 
