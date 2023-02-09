@@ -24,7 +24,7 @@
                                     @if ($user->image)
                                         <img src="{{ Storage::url($user->image) }}" alt="Avatar de {{ $user->name }}" class="w-full h-full rounded-full object-center" />
                                     @else
-                                        <img src="{{ asset('images/avatar.png') }}" alt="default avatar" />
+                                        <img src="{{ asset('images/avatar.png') }}" alt="default avatar" class="w-full h-full rounded-full object-center" />
                                     @endif
                                 </div>
                                 <div>

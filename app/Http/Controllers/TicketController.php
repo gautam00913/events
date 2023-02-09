@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Event;
 use App\Models\Ticket;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use LaravelQRCode\Facades\QRCode;
 
 class TicketController extends Controller
 {
@@ -74,5 +76,16 @@ class TicketController extends Controller
             'type' => 'success',
             'message' => "Achat de billets effectué avec succès.\n Consultez votre boîte mail pour télécharger votre billet ou visitez votre profile"
         ]);
+    }
+
+    public function pdf()
+    {
+        $qrcode = 'qrcodes/qrcode.png';
+        QRCode::url(route('home'))->setMargin(1)->setOutfile(public_path($qrcode))->png();
+        $pdf = Pdf::loadView('tickets.pdf', [
+            'qrcode' => $qrcode
+        ]);
+        $pdf->setPaper('a6', 'landscape');
+        return $pdf->stream();
     }
 }

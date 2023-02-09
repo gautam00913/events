@@ -21,6 +21,7 @@ Route::get('/',[StaticPageController::class, 'home'])->name('home');
 
 Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
 Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+Route::get('tickets/pdf', [TicketController::class, 'pdf'])->name('tickets.pdf');
 Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', [StaticPageController::class, 'dashboard'])->name('dashboard');
     Route::get('tickets/buy', [TicketController::class, 'buy'])->name('tickets.buy');
