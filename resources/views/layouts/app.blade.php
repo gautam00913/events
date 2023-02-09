@@ -10,7 +10,8 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+        <link rel="stylesheet" href="{{ asset('build/assets/app.29633b93.css') }}">
         <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
         @yield('int-tel-phone')
     </head>
@@ -73,6 +74,8 @@
  
           
         <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
+        <script src="{{ asset('build/assets/app.61cdcf6c.js') }}"></script>
+
         <script>
             $.ajaxSetup({
                 headers:{
