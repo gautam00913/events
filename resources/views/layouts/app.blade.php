@@ -10,8 +10,8 @@
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
         <!-- Scripts -->
-        {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
-        <link rel="stylesheet" href="{{ asset('build/assets/app.29633b93.css') }}">
+        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        {{-- <link rel="stylesheet" href="{{ asset('build/assets/app.29633b93.css') }}"> --}}
         <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
         @yield('int-tel-phone')
     </head>
@@ -74,7 +74,7 @@
  
           
         <script src="https://code.jquery.com/jquery-3.6.2.min.js" integrity="sha256-2krYZKh//PcchRtd+H+VyyQoZ/e3EcrkxhM8ycwASPA=" crossorigin="anonymous"></script>
-        <script src="{{ asset('build/assets/app.61cdcf6c.js') }}"></script>
+        {{-- <script src="{{ asset('build/assets/app.61cdcf6c.js') }}"></script> --}}
 
         <script>
             $.ajaxSetup({
@@ -174,13 +174,13 @@
                 })
                 $(document).on('click', '#buyEventTicket', function(e){
                     e.preventDefault()
-                    const ticket_prices = document.querySelectorAll('form .ticket_prices')
-                    const ticket_numbers = document.querySelectorAll('form input[name="number_places\[\]"]')
-                    const tickets = document.querySelectorAll('form input[name="tickets\[\]"]:checked')
+                    const ticket_ids = document.querySelectorAll('form .ticket_ids:checked')
                     const event_name = document.querySelector('form input[name="event_name"]').value
                     const event_id = document.querySelector('form input[name="event_id"]').value
                     const error = document.getElementById('error')
                     let price = 0, tickets_id = [], tickets_place = []
+                    const tickets = Array.from(ticket_ids);
+
                     if (tickets.length === 0) {
                         error.classList.remove('hidden')
                         error.textContent = "Veillez cocher au moins une case";
@@ -190,12 +190,13 @@
                         }, 3000);
                     } else {
                         let isValid = true
-                        tickets.forEach(function(ticket_id, index){
-                            const qty = Number(ticket_numbers[index].value)
+                        tickets.forEach(function(ticket, index){
+                            const id = ticket.dataset.id;
+                            const qty = Number(document.querySelector(`form #number_place_ticket_${id}`).value)
                             if (qty >= 1) {
-                                const amount = Number(ticket_prices[index].value)
+                                const amount = Number(document.querySelector(`form #ticket_price_${id}`).value)
                                 price += (amount * qty)
-                                tickets_id.push(ticket_id.value)
+                                tickets_id.push(ticket.value)
                                 tickets_place.push(qty)  
                             } else {
                                 isValid = false;
@@ -283,6 +284,15 @@
                     })
                
                 });
+                //show event participants
+                $(document).on('click', '.eventParticipants', function(){
+                    const event = $(this).data('event');
+                    $.get($(this).data('url'), response => {
+                        $('#modalTitle').html(`Liste des participants de l'évènement <span class='text-purple-800'>${event}</span>`)
+                        $('#modalContent').html(response)
+                        modal.show(); 
+                    })
+                })
                 //edit event
                 $(document).on('click', '.editEvent', function(){
                     $.get($(this).data('url'), response => {

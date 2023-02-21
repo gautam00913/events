@@ -7,7 +7,7 @@
 <div class="{{ $message ? '' : 'hidden' }} px-4 py-2 rounded fixed top-2 right-2 z-30 inline-block max-w-md {{ $color[$type] }}" id="toast">
     <div class="flex space-x-5 items-start">
         <div>
-            {{ $message }}
+            {!! $message !!}
         </div>
         <button id="closeToast" type="button">
             X

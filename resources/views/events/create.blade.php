@@ -1,4 +1,5 @@
 <x-app-layout>
+    <x-slot:title>Ajoutez votre évènement et faites assez de revenus en fournissant moins d'effort</x-slot:title>
     <x-slot name="header">
         <h2 class="peer font-semibold text-xl text-white hover:text-yellow-500 leading-tight">
             Créer votre évènement

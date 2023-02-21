@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\EventRequest;
 use App\Models\Tag;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Ticket;
+use App\Pipes\Events\Event as EventPipe;
 use App\Pipes\Events\Search;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use App\Http\Requests\EventRequest;
 
 class EventController extends Controller
 {
@@ -27,6 +28,7 @@ class EventController extends Controller
         $events= app(Pipeline::class)->send(Event::where('starts_at', '>=', now())
         ->with(['user', 'tags', 'tickets']))
         ->through([
+            EventPipe::class,
             Search::class,
         ])->thenReturn()
                       ->orderBy('starts_at')
@@ -201,14 +203,30 @@ class EventController extends Controller
 
     public function participations()
     {
+        $user = auth()->user();
         return view('events.participated', [
-            'participations' => auth()->user()->participations
+            'participations' => $user->participations,
+            'user' => $user
+        ]);
+    }
+    public function participants(Event $event)
+    {
+        return view('events.participants', [
+            'participants' => $event->participants,
         ]);
     }
     public function created()
     {
+        
         return view('events.created', [
-            'events' => auth()->user()->events()->with(['tags', 'tickets'])->paginate(9)
+            'events' => app(Pipeline::class)
+                        ->send(auth()->user()->events()->with(['tags', 'tickets']))
+                        ->through([
+                            EventPipe::class
+                        ])
+                        ->thenReturn()
+                        ->orderByDesc('created_at')
+                        ->paginate(9)
         ]);
     }
 }

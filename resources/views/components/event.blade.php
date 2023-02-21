@@ -89,9 +89,9 @@
                     </div>
                 @endif
                 @foreach ($event->tickets as $ticket)
-                    <x-input type="hidden" class="ticket_prices" :value="$ticket->pivot->price" ></x-input>
+                    <x-input type="hidden" id="ticket_price_{{ $ticket->pivot->id }}" :value="$ticket->pivot->price" ></x-input>
                     <div class="flex items-center mb-3 space-x-4">
-                            <x-input type="checkbox" name="tickets[]" :value="$ticket->pivot->id" id="ticket_{{ $ticket->pivot->id }}" :checked="$loop->first"></x-input>
+                            <x-input type="checkbox" class="ticket_ids" :data-id="$ticket->pivot->id" :value="$ticket->pivot->id" id="ticket_{{ $ticket->pivot->id }}" :checked="$loop->first"></x-input>
                             <x-label :value="$ticket->name" for="ticket_{{ $ticket->pivot->id }}"/>
                             <p class="text-purple-600">{{ number_format($ticket->pivot->price, 2, '.', ' '). ' '. config('app.devise') }}</p>
                     </div>

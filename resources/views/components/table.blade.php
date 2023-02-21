@@ -7,5 +7,10 @@
         <tbody>
             {{ $tbody }}
         </tbody>
+        @isset($tfoot)
+            <tfoot class="text-xs text-yellow-300 uppercase bg-purple-800 ">
+                {{ $tfoot }}
+            </tfoot>
+        @endisset
     </table>
 </div>
