@@ -118,6 +118,7 @@ class EventController extends Controller
      */
     public function edit(Event $event)
     {
+        if($event->user_id !== auth()->user()->id) return abort(404);
         $tickets = Ticket::all();
         return view('events.edit', compact('event', 'tickets'));
     }
@@ -131,6 +132,7 @@ class EventController extends Controller
      */
     public function update(EventRequest $request, Event $event)
     {
+        if($event->user_id !== auth()->user()->id) return abort(404);
         $image = null;
         $tab = [];
        if($request->image)
@@ -194,6 +196,7 @@ class EventController extends Controller
      */
     public function destroy(Event $event)
     {
+        if($event->user_id !== auth()->user()->id) return abort(404);
         $event->delete();
         return back()->with('toast', [
             'type' => 'success',

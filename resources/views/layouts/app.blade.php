@@ -4,8 +4,8 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'Laravel') }}@isset($title) | {{ $title }} @endisset</title>
+        <meta name="author" content="Gautier DJOSSOU <gautierdjossou@gmail.com>">
+        <title>{{ config('app.name', 'E-events') }}@isset($title) | {{ $title }} @endisset</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
@@ -87,15 +87,75 @@
                 let phoneInput = null;
                 const modal = new Modal(document.getElementById('modalEl'));
 
-                        $(document).on('click', '.closeModal', function(){
-                                modal.hide();                            
-                        });
-                        $(document).on('click', '.addTicketBtn', function(){
-                            $('#addTicketModal').removeClass('hidden');
-                            let id = $(this).data('id');
-                            $('#select_option').val(id)
-                            
-                        });
+                $(document).on('click', '.closeModal', function(){
+                        modal.hide();                            
+                });
+                $(document).on('click', '.addTicketBtn', function(){
+                    $('#addTicketModal').removeClass('hidden');
+                    let id = $(this).data('id');
+                    $('#select_option').val(id)
+                    
+                });
+                $(document).on('click', '.shareEvent', function(e){
+                    e.preventDefault();
+                    let url = "{{ route('events.index') }}";
+                    let slug = $(this).data('slug');
+                    let event = $(this).data('event');
+                    url += `?event=${slug}`;
+                    let html = '<p class="italic font-semibold">Partagez par : </p>'
+                     html += `<div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
+                        <x-button class="social_share m-3 justify-center" data-type="fb" data-url="${url}">
+                            Facebook
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="twitter" data-url="${url}">
+                            Twitter
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="gplus" data-url="${url}">
+                            Google+
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="googlebookmarks" data-url="${url}">
+                            Google Bookmarks
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="livejournal" data-url="${url}">
+                            LiveJournal
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="tumblr" data-url="${url}">
+                            Tumblr
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="pinterest" data-url="${url}">
+                            Pinterest
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="reddit" data-url="${url}">
+                            Reddit
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="mailru" data-url="${url}">
+                            Mail.ru
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="weibo" data-url="${url}">
+                            Weibo
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="skype" data-url="${url}">
+                            Skype
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="telegram" data-url="${url}">
+                            Telegram
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="whatsapp" data-url="${url}">
+                            Whatsapp
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="viber" data-url="${url}">
+                            Viber
+                        </x-button>
+                        <x-button class="social_share m-3 justify-center" data-type="email" data-url="${url}">
+                            Email
+                        </x-button>
+                        </div>`;
+                        $('#modalTitle').html("Partagez l'évènement <span class='font-semibold text-purple-700'>"+ event + '</span>')
+                    $('#modalContent').html(html)
+                    modal.show();
+
+                    
+                });
                 $(document).on('click', '#AddTicket', function(){
                     let name = $('#add_ticket_name').val();
                     let id = $('#select_option').val()
@@ -150,9 +210,9 @@
 
                 //buy ticket
                 $('.buyTicket').click(function(e){
-                    let info = $(this).siblings('.event_tickets').html()
-                    let flyers = e.target.parentElement.parentElement.querySelector('img.flyers').src
-                    const event = e.target.parentElement.parentElement.querySelector('h2.event_title')
+                    let info = $(this).parent().siblings('.event_tickets').html()
+                    let flyers = e.target.parentElement.parentElement.parentElement.querySelector('img.flyers').src
+                    const event = e.target.parentElement.parentElement.parentElement.querySelector('h2.event_title')
                     const div = document.createElement('div')
                     const img = document.createElement('img')
                     div.className="grid md:grid-cols-2 gap-4 md:gap-6 px-3"

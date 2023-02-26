@@ -40,7 +40,7 @@
                                         <x-td>
                                           <div class="flex space-x-2 items-center">
                                             <p>{{ $key +1 }}</p>
-                                            
+                                            <x-button type="button" class="validateTransaction">Valider</x-button>
                                           </div>
                                         </x-td>
                                         <x-td>{{ $transaction->initiatedBy->name }}</x-td>
