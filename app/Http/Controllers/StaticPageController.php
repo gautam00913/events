@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\EventUser;
+use App\Models\Transaction;
 use App\Mail\NewTicketBuyed;
 use App\Pipes\Events\Search;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
+use Illuminate\Support\Facades\Gate;
 
 class StaticPageController extends Controller
 {
@@ -56,5 +58,13 @@ class StaticPageController extends Controller
         ];
         return new NewTicketBuyed($event, $user, $tickets_buyed, $total_amount);
         
+    }
+
+    public function admin()
+    {
+        Gate::authorize('administrate');
+        return view('admin.index', [
+            'transactions' => Transaction::with('initiatedBy')->get()
+        ]);
     }
 }

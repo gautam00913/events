@@ -48,6 +48,9 @@
                         <x-slot name="content">
                             <div class="divide-y">
                                 <x-dropdown-link :href="route('dashboard')">Dashboard</x-dropdown-link>
+                                @can('administrate')
+                                    <x-dropdown-link   x-dropdown-link :href="route('admin')">Administration</x-dropdown-link>
+                                @endcan
                                 <!-- Authentication -->
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
@@ -128,6 +131,11 @@
                 <x-responsive-nav-link class="text-white" :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                     {{ __('Dashboard') }}
                 </x-responsive-nav-link>
+                @can('administrate')
+                    <x-responsive-nav-link class="text-white" :href="route('admin')" :active="request()->routeIs('dashboard')">
+                        {{ __('Administration') }}
+                    </x-responsive-nav-link>
+                @endcan
             @endauth
         </div>
 

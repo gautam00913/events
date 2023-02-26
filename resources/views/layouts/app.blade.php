@@ -347,7 +347,53 @@
                     $('#confirmMessage').html('')
                    $('#confirmationModal').addClass('hidden')
                 })
+
+                //transactions history
+                $(document).on('click', '#transactionsHistory', function(e) {
+                    e.preventDefault();
+                    axios.get("{{ route('transactions.history') }}")
+                    .then(response => {
+                        $('#modalTitle').html("Historique des virements")
+                        $('#modalContent').html(response.data)
+                        modal.show(); 
+                    })
+                    .catch(error => console.log(error))
+                });
+                //init payment request
+                $(document).on('click', '#claimAmount', function(e) {
+                    e.preventDefault();
+                    axios.get("{{ route('transactions.create') }}")
+                    .then(response => {
+                        $('#modalTitle').html("Demande de virement d'argent vers votre compte")
+                        $('#modalContent').html(response.data)
+                        modal.show(); 
+                    })
+                    .catch(error => console.log(error))
+                });
+                //insert payment request
+                $(document).on('submit', '#insertTransactionForm', function(e) {
+                        e.preventDefault();
+                        const data = new FormData(this)
+                        axios.post(this.action, data)
+                            .then(response => {
+                                if (response.data.transaction) {
+                                    window.location = ""
+                                }
+                            })
+                            .catch(error => {
+                                const errors = Object.entries(error.response.data.errors)
+                                errors.forEach((element) => {
+                                    [key, message] = element
+                                    document.getElementById(key).classList.add('border-red-600')
+                                    document.getElementById(key).insertAdjacentHTML('afterend', `
+                                    <p class="text-red-600 italic">${message[0]}</p>
+                                    `)
+                                })
+                        })
+                   
+                });
             });
+
         </script>
     </body>
 </html>

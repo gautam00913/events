@@ -92,7 +92,7 @@
                             <p class="text-center group-hover:text-white mb-3">
                                 Montant déjà reçu <span class="text-yellow-500 group-hover:text-yellow-300 group-hover:font-bold">( {{ number_format($user->transactions_sum_refunded_amount, 2, '.', ' '). ' '. config('app.devise') }} )</span>
                             </p>
-                            <x-button type="button" class="w-full justify-center" id="participationsHistory">Historique</x-button>
+                            <x-button type="button" class="w-full justify-center" id="transactionsHistory">Historique</x-button>
                         </x-card>
                         <x-card class="flex flex-col justify-between">
                             <p class="flex justify-center mb-3">

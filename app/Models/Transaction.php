@@ -9,12 +9,24 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class Transaction extends Model
 {
     use HasFactory;
-    protected $fillable = ['amount', 'user_id', 'fees_amount', 'refunded_amount',
-     'account_holder', 'account_number', 'account_provider', 'initiate_at', 'refunded_at' ];
+    protected $casts = [
+        'initiate_at' => 'datetime',
+        'refunded_at' => 'datetime'
+    ];
+    protected $fillable = ['amount', 'fees_amount', 'refunded_amount',
+     'account_holder', 'account_number', 'account_provider' ];
 
     public $timestamps = false;
     
-    public function initiedBy(): BelongsTo
+    protected static function boot()
+    {
+        parent::boot();
+        static::creating(function($model){
+            $model->initiate_at = now();
+            $model->user_id = auth()->user()->id;
+        });
+    }
+    public function initiatedBy(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
