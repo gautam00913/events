@@ -7,6 +7,7 @@
         <meta name="author" content="Gautier DJOSSOU <gautierdjossou@gmail.com>">
         <title>{{ config('app.name', 'E-events') }}@isset($title) | {{ $title }} @endisset</title>
 
+        <link rel="icon" type="images/jpeg" href="{{ asset('images/e-event-icon.jpeg') }}">
         <!-- Fonts -->
         <link rel="stylesheet" href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap">
         <!-- Scripts -->
