@@ -144,6 +144,7 @@ return [
     ],
 
     'devise' => env('DEVISE', 'F CFA'),
+    'managment_fees' => env('MANAGMENT_FEES', 0.03),
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

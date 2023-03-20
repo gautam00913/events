@@ -38,6 +38,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('transactions/create', [TransactionController::class, 'create'])->name('transactions.create');
     Route::get('transactions/history', [TransactionController::class, 'history'])->name('transactions.history');
     Route::post('transactions', [TransactionController::class, 'insert'])->name('transactions.insert');
+    Route::get('transactions/{id}/detail', [TransactionController::class, 'detail'])->name('transactions.detail');
+    Route::post('transactions/{transaction}/approuve', [TransactionController::class, 'approuve'])->name('transactions.approuve');
 
 });
 

@@ -14,7 +14,7 @@ class Transaction extends Model
         'refunded_at' => 'datetime'
     ];
     protected $fillable = ['amount', 'fees_amount', 'refunded_amount',
-     'account_holder', 'account_number', 'account_provider' ];
+     'account_holder', 'account_number', 'account_provider','refunded_at','initiate_at' ];
 
     public $timestamps = false;
     

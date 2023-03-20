@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Mail\NotifyPaymentRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 
 class TransactionController extends Controller
@@ -41,5 +42,30 @@ class TransactionController extends Controller
     public function history()
     {
         return view('transactions.history', ['transactions' => auth()->user()->transactions]);
+    }
+
+    public function approuve(Transaction $transaction)
+    {
+        Gate::authorize('administrate');
+        $fees = $transaction->amount * config('app.managment_fees');
+        $transaction->update([
+            'fees_amount' => $fees,
+            'refunded_amount' => $transaction->amount - $fees,
+            'refunded_at' => now(),
+        ]);
+
+        return back()->with('toast', [
+            'type' => 'success',
+            'message' => "Transaction n° $transaction->id approuvée avec succès"
+        ]);
+    }
+
+    public function detail($id)
+    {
+        Gate::authorize('administrate');
+        $transaction = Transaction::with('initiatedBy')->find($id);
+        $fees_amount = $transaction->amount * config('app.managment_fees');
+
+        return view('transactions.detail', compact('transaction', 'fees_amount'));
     }
 }

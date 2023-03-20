@@ -452,6 +452,23 @@
                         })
                    
                 });
+                //transaction validation
+                $('.validateTransaction').on('click', function(e) {
+                        e.preventDefault();
+                        const url = $(this).data('url');
+                        const id = $(this).data('id');
+                        axios.get(url)
+                            .then(response => {
+                                $('#modalTitle').html("Approbation de la transaction n° "+ id)
+                                $('#modalContent').html(response.data)
+                                modal.show();
+                            })
+                            .catch(error => {
+                                console.log(error);
+                                })
+                        })
+                   
+                });
             });
 
         </script>
