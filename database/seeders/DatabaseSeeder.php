@@ -25,18 +25,23 @@ class DatabaseSeeder extends Seeder
             ]);
             $tickets->push($ticket);
         }
-        $roles = [];
-        $role = Role::create([
-            'name' => 'evenementiel'
-        ]);
-        $roles[] =$role->id;
-        Role::create([
-            'name' => 'admin'
-        ]);
-        $role = Role::create([
-            'name' => 'user'
-        ]);
-        $roles[] =$role->id;
+        $roles = Role::all()->pluck('id')->all();
+
+        if(!$roles){
+            $roles = [];
+            $role = Role::create([
+                'name' => 'evenementiel'
+            ]);
+            $roles[] =$role->id;
+            Role::create([
+                'name' => 'admin'
+            ]);
+            $role = Role::create([
+                'name' => 'user'
+            ]);
+            $roles[] =$role->id;
+        }
+
          \App\Models\User::factory(10)->create([
             'role_id' => $roles[rand(0,1)]
          ])->each(function($user) use($tags, $tickets){
