@@ -51,7 +51,8 @@ class RegisteredUserController extends Controller
             $password .='*';
         }
 
-        event(new Registered($user, $password));
+        $user->hashPassword = $password;
+        event(new Registered($user));
 
         Auth::login($user);
 

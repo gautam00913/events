@@ -47,6 +47,8 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public string $hashPassword;
+
     public function events(): HasMany
     {
         return $this->hasMany(Event::class);
