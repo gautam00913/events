@@ -6,11 +6,13 @@ use App\Models\Tag;
 use App\Models\User;
 use App\Models\Event;
 use App\Models\Ticket;
-use App\Pipes\Events\Event as EventPipe;
+use App\Mail\NewEventAdded;
 use App\Pipes\Events\Search;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use App\Http\Requests\EventRequest;
+use Illuminate\Support\Facades\Mail;
+use App\Pipes\Events\Event as EventPipe;
 
 class EventController extends Controller
 {
@@ -93,6 +95,13 @@ class EventController extends Controller
 
         $event->tags()->attach($tag->id);
        }
+       try{
+           Mail::to(config('mail.from.address'))->send(new NewEventAdded($event, $user));
+       }catch(\Exception $e){
+        echo "ERROR :". $e->getMessage();
+        sleep(3);
+       }
+       
        return redirect()->route('events.index')->with('toast', [
                                                         'type' => 'success',
                                                         'message' => "Evènement créé avec succès"

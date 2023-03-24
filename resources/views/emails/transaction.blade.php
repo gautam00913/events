@@ -7,7 +7,7 @@ vers son compte mobile money({{ $transaction->account_provider }}).
 
 Connectez-vous pour approuver cette transaction.
 
-@component('mail::button', ['url' => '', 'color' => 'purple'])
+@component('mail::button', ['url' => route('dashboard'), 'color' => 'purple'])
 Se connecter
 @endcomponent
 

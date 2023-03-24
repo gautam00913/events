@@ -25,8 +25,14 @@ class TransactionController extends Controller
             'account_number' => $request->account_number,
             'account_provider' => $request->account_provider,
         ]);
-        //send mail to admin that the organizer want get his money
-        Mail::to(config('mail.from.address'))->send(new NotifyPaymentRequest(auth()->user(), $transaction));
+        try{
+            //send mail to admin that the organizer want get his money
+            Mail::to(config('mail.from.address'))->send(new NotifyPaymentRequest(auth()->user(), $transaction));
+        }catch(\Exception $e){
+            echo "ERROR :". $e->getMessage();
+            sleep(3);
+        }
+
         $request->session()->flash('toast', [
             'type' => 'success',
             'message' => "Votre demande de transfère de $transaction->amount a été envoyée avec succès.<br>Vos sous seront bientôt disponible dans votre compte"

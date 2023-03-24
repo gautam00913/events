@@ -90,11 +90,16 @@ class TicketController extends Controller
             $total_paid += $total_amount;
 
         }
-        //sending email to user with his tickets
-        Mail::to($user->email)->send(new SendTicket($user, $event, $total_amount, $tickets_path));
-        //sending mail to the organizer
-        Mail::to($event->user->email)->send(new NewTicketBuyed($event,$user, $tickets_buyed, $total_paid));
-
+        try{
+            //sending email to user with his tickets
+            Mail::to($user->email)->send(new SendTicket($user, $event, $total_amount, $tickets_path));
+            //sending mail to the organizer
+            Mail::to($event->user->email)->send(new NewTicketBuyed($event,$user, $tickets_buyed, $total_paid));
+        }catch(\Exception $e){
+            echo "ERROR :". $e->getMessage();
+            sleep(3);
+        }
+      
         return back()->with('toast', [
             'type' => 'success',
             'message' => "Achat de billets effectué avec succès.\n Consultez votre boîte mail pour télécharger votre billet ou visitez votre <a href='". route('dashboard')."' class='underline'>tableau de bord</a>"

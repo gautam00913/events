@@ -21,8 +21,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/',[StaticPageController::class, 'home'])->name('home');
 Route::get('/email',[StaticPageController::class, 'email']);
 
-Route::post('tickets', [TicketController::class, 'store'])->name('tickets.store');
 Route::get('tickets/create', [TicketController::class, 'create'])->name('tickets.create');
+Route::post('tickets/store', [TicketController::class, 'store'])->name('tickets.store');
 Route::get('tickets/{ticket}/download', [TicketController::class, 'download'])->name('tickets.download');
 Route::middleware(['auth'])->group(function(){
     Route::get('/dashboard', [StaticPageController::class, 'dashboard'])->name('dashboard');
