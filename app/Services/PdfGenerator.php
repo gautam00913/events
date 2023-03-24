@@ -26,7 +26,9 @@ class PdfGenerator
             'reserve_at' => $reserve_at,
         ]);
         $pdf->setPaper('a6', 'landscape')->save(public_path($ticket_name));
-        unlink(public_path($qrcode));
+        if(file_exists(public_path($qrcode)))
+            unlink(public_path($qrcode));
+            
         return $ticket_name;
     }
 
