@@ -19,7 +19,7 @@
                     {{ $events->links() }}
                 </div>
             @else
-                <div class="text-center bg-white py-5">
+                <div class="text-center bg-white py-10 rounded-lg">
                     <p class="text-4xl animate-bounce">
                         📆
                     </p>

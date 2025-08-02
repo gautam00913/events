@@ -16,23 +16,27 @@
         @yield('int-tel-phone')
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-purple-900">
-            @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            <header class="text-white">
-                <div class=" max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 inline-block">
-                    {{ $header }}
-                </div>
-            </header>
-            <x-toast :message="session()->has('toast') ? session()->get('toast')['message'] : ''"
-                :type="session()->has('toast') ? session()->get('toast')['type'] : 'success'">
-            </x-toast>
-            <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-            <x-footer></x-footer>
+        <div class="min-h-screen bg-purple-900 flex flex-col justify-between">
+            <div>
+                @include('layouts.navigation')
+    
+                <!-- Page Heading -->
+                <header class="text-white">
+                    <div class=" max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 inline-block">
+                        {{ $header }}
+                    </div>
+                </header>
+                <x-toast :message="session()->has('toast') ? session()->get('toast')['message'] : ''"
+                    :type="session()->has('toast') ? session()->get('toast')['type'] : 'success'">
+                </x-toast>
+                <!-- Page Content -->
+                <main>
+                    {{ $slot }}
+                </main>
+            </div>
+            <div class="mt-10">
+                <x-footer></x-footer>
+            </div>
         </div>
         
 
@@ -179,6 +183,8 @@
                 $(document).on('input', '#ticket_number',()=>{
                     const tickets = document.querySelectorAll('fieldset')
                     let ticket_number = $('#ticket_number').val()
+                    if(ticket_number < 1)
+                        ticket_number = 1;
                     const reference = document.querySelector('.btn_create'),
                     form = document.getElementById('addEventForm')
                     if (tickets.length > ticket_number) {

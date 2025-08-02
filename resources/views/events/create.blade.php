@@ -46,7 +46,7 @@
                         <x-input id="image" name="image" :value="old('image')" class="w-full" type="file" />
                     </div>
                     <div class="my-3">
-                        <x-label  for="ticket_number" value="Nombre de billets" />
+                        <x-label  for="ticket_number" value="Nombre de billets (Maximum 5)" />
                         <x-input id="ticket_number" name="ticket_number" :value="old('ticket_number', 1)" class="w-full" type="number" min="1" max="5" />
                     </div>
                     <fieldset class="border px-4 py-2">
