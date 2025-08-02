@@ -18,5 +18,6 @@
         <div class="font-sans text-white bg-purple-900 antialiased">
             {{ $slot }}
         </div>
+        <x-footer></x-footer>
     </body>
 </html>
