@@ -8,9 +8,9 @@
     </x-slot>
 
     <section>
-        <div class="px-5 md:px-20 py-10">
+        <div class="px-5 md:px-10 lg:px-20 py-10">
             @if ($events->count())
-                <div class="grid md:grid-cols-3 md:gap-10 gap-5">
+                <div class="grid md:grid-cols-2 lg:grid-cols-3 md:gap-10 gap-5">
                     @foreach ( $events as $event )
                         <x-event :event="$event" />
                     @endforeach 
@@ -19,10 +19,9 @@
                     {{ $events->links() }}
                 </div>
             @else
-                <div class="text-center bg-white py-10 rounded-lg">
-                    <p class="text-4xl animate-bounce">
-                        📆
-                    </p>
+                <div class="text-center bg-white pb-10 rounded-lg">
+                    <img src="{{ asset('images/events.png') }}" class="w-full rounded-lg h-96 object-cover" />
+                   
                     <p class="my-4 text-yellow-600">
                         Pas d'évènement disponible avant les trois prochains mois.
                     </p>

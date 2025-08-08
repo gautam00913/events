@@ -6,13 +6,13 @@
         </h2>
         <p class="w-1/2 border border-yellow-300 peer-hover:w-full"></p>
     </x-slot>
-    <section class="container">
+    <section class="px-2 md:px-10 py-5">
         <h2 class="text-yellow-300 px-4 sm:px-6 lg:px-8 font-semibold text-lg">
             Profitez de l'ensemble de nos meilleurs évènements. Participez aux évènements 
             de vos artistes préférés en achetant leur billet en ligne sans vous déplacer de votre maison.
             C'est chic 😍.
         </h2>
-        <div class="px-5 md:px-20 py-10">
+        <div class="px-2 md:px-5 lg:px-20 py-10">
             @if ($events->count())
                 <div class="grid md:grid-cols-2 lg:grid-cols-3 md:gap-10 gap-5">
                     @foreach ( $events as $event )
@@ -23,12 +23,11 @@
                     {{ $events->links() }}
                 </div>
             @else
-                <div class="justify-center shadow-lg h-64 flex items-center flex-col bg-white">
-                    <p class="text-4xl animate-bounce">
-                        📆
-                    </p>
-                    <p>
-                        Pas  d'évènement disponible
+                <div class="justify-center shadow-lg flex items-center flex-col bg-white rounded-lg overflow-hidden">
+                    <img src="{{ asset('images/events.png') }}" class="w-full rounded-t-lg h-52 object-cover" />
+                   
+                    <p class="my-4 text-yellow-600">
+                        Pas  d'évènement disponible.
                     </p>
                     @if (Request::query('search'))
                         <p class="mt-4">

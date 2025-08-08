@@ -16,7 +16,7 @@
             </div>
             <div class="my-3">
                 <x-label  for="premium" value="Premium ?" />
-                <x-input id="premium" name="premium" value="1" type="checkbox" @if($event->premium) checked @endif />
+                <x-input id="premium" name="premium" value="1" type="checkbox" :checked="$event->premium" />
             </div>
             <div class="my-3">
                 <x-label  for="content" >

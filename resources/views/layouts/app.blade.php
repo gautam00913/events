@@ -22,7 +22,7 @@
     
                 <!-- Page Heading -->
                 <header class="text-white">
-                    <div class=" max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 inline-block">
+                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8 inline-block">
                         {{ $header }}
                     </div>
                 </header>
@@ -60,10 +60,6 @@
                
             </div>
             <!-- Modal footer -->
-            <div id="modalFooter" class="invisible flex items-center justify-end p-6 space-x-2 border-t border-gray-200 rounded-b dark:border-gray-600">
-                <x-button data-modal-hide="myModal" type="button">I accept</x-button>
-                <button data-modal-hide="myModal" type="button" class="text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600">Decline</button>
-            </div>
         </div>
     </div>
 
@@ -205,7 +201,7 @@
                         for(let i=tickets.length+1; i<=ticket_number; i++){
                             const fieldset = document.createElement('fieldset')
                           fieldset.className = 'border px-4 py-2'
-                          $.get("{{ route('tickets.create') }}", {id: ticket_number}, response => {
+                          $.get("{{ route('tickets.create') }}", {id: i}, response => {
                               fieldset.innerHTML = response
                               form.insertBefore(fieldset, reference)
                           })
@@ -222,7 +218,7 @@
                     const div = document.createElement('div')
                     const img = document.createElement('img')
                     div.className="grid md:grid-cols-2 gap-4 md:gap-6 px-3"
-                    img.className="object-center object-cover w-full h-full rounded-lg border border-white"
+                    img.className="object-center w-full h-full rounded-lg border border-white"
                     img.src = flyers
                     div.appendChild(img)
                     div.innerHTML += `
@@ -279,7 +275,7 @@
                             }, 3000);
                         } else {
                             let widget =  FedaPay.init({
-                                public_key: 'pk_sandbox_GVYrmawmN6UDU4Y0YVCLTeQi',
+                                public_key: "{{ env('FEDAPAY_PUBLIC_KEY') }}",
                                 transaction:{
                                     amount: price,
                                     description: "Achat de billets pour l'évènement "+ event_name
@@ -474,6 +470,18 @@
                                 })
                 })
             });
+            $(document).on('submit', 'form', function(){
+                let content = `<svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>`;
+                let button = $(this).find('button[type="submit"]');
+                if(button){
+                    content += $(button).html();
+                    $(button).addClass('transition ease-in-out duration-150 cursor-not-allowed').attr('disabled', true);
+                    $(button).html(content);
+                }
+            })
 
         </script>
     </body>

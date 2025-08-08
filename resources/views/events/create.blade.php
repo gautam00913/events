@@ -7,7 +7,7 @@
         <p class="w-1/2 border border-yellow-300 peer-hover:w-full"></p>
     </x-slot>
     <section class="container mx-auto pt-4 pb-10">
-        <div class="bg-white rounded-lg px-3 md:px-10 py-10 w-4/5 md:w-1/2 mx-auto">
+        <div class="bg-white rounded-lg px-3 md:px-10 py-10 w-11/12 md:w-4/5 lg:w-1/2 mx-auto">
             <x-auth-validation-errors class="mb-4" :errors="$errors" />
             <form action="{{ route('events.store') }}" method="POST" id="addEventForm" enctype="multipart/form-data">
                 @csrf
@@ -25,7 +25,7 @@
                     </div>
                     <div class="my-3">
                         <x-label  for="premium" value="Premium ?" />
-                        <x-input id="premium" name="premium" value="1" type="checkbox" @if(old('premium')) checked @endif />
+                        <x-input id="premium" name="premium" value="1" type="checkbox" :checked="old('premium')" />
                     </div>
                     <div class="my-3">
                         <x-label  for="content" >
@@ -72,7 +72,7 @@
                             </div>
                             <div class="my-3">
                                 <x-label  for="ticket_price_1">
-                                    Prix unitaire <span class='text-red-600'>*</span>
+                                    Prix unitaire (En {{ env('DEVISE') }}) <span class='text-red-600'>*</span>
                                 </x-label>
                                 <x-input id="ticket_price_1" name="ticket_price[]" class="w-full" type="number" required min="0"/>
                               

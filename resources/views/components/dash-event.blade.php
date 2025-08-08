@@ -3,7 +3,7 @@
         <div>
             <div class="relative">
                 @if ($event->image)
-                    <img src="{{ Storage::url($event->image) }}" class="flyers h-64 object-center object-cover w-full transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0" alt="flyers for event {{ $event->title }}">
+                    <img src="{{ Storage::url($event->image) }}" class="flyers h-64 object-center object-fill w-full transition-all duration-300 cursor-pointer filter grayscale hover:grayscale-0" alt="flyers for event {{ $event->title }}">
                 @else
                     <img src="{{ asset('images/default.png') }}" class="flyers h-64 object-center object-cover w-full" alt="default image">
                 @endif
