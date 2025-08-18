@@ -65,45 +65,58 @@ class TicketController extends Controller
             $reserve_at = now();
             $total_amount = $ticket->pivot->price * $place;
             $user = auth()->user();
-            $user->participations()->attach($event->id, [
-                'event_ticket_id' => $ticket->pivot->id,
-                'number_place' => $place,
-                'total_amount' => $total_amount,
-                'reserve_at' => $reserve_at,
-                'payment_id' => $request->payment_id
-            ]);
-         
-            DB::table('event_ticket')
-                ->where('id', $ticket->pivot->id)
-                ->update([
-                    'remaining_place' => $ticket->pivot->remaining_place - $place
+            try{
+                $done = $user->participations()->attach($event->id, [
+                    'event_ticket_id' => $ticket->pivot->id,
+                    'number_place' => $place,
+                    'total_amount' => $total_amount,
+                    'reserve_at' => $reserve_at,
+                    'payment_id' => $request->payment_id
                 ]);
-
-            //generate ticket pdf
-            $tickets_path[] = $pdfGenerator->eventTicket($event, $ticket, $place, $user->name, $user->id, $reserve_at);
-            $tickets_buyed[] = [
-                'ticket_id' =>$ticket->id,
-                'ticket_name' =>$ticket->name,
-                'ticket_price' =>$ticket->pivot->price,
-                'number_place' =>$place,
-                'total_amount' =>$total_amount,
-            ];
-            $total_paid += $total_amount;
+            }catch(\Exception $e){
+                Log::error("ERROR DURING PAYMENT SAVING :". $e->getMessage());
+                $done = false;
+            }
+         
+            if($done){
+                DB::table('event_ticket')
+                    ->where('id', $ticket->pivot->id)
+                    ->update([
+                        'remaining_place' => $ticket->pivot->remaining_place - $place
+                    ]);
+    
+                //generate ticket pdf
+                $tickets_path[] = $pdfGenerator->eventTicket($event, $ticket, $place, $user->name, $user->id, $reserve_at);
+                $tickets_buyed[] = [
+                    'ticket_id' =>$ticket->id,
+                    'ticket_name' =>$ticket->name,
+                    'ticket_price' =>$ticket->pivot->price,
+                    'number_place' =>$place,
+                    'total_amount' =>$total_amount,
+                ];
+                $total_paid += $total_amount;
+            }
 
         }
-        try{
-            //sending email to user with his tickets
-            Mail::to($user->email)->send(new SendTicket($user, $event, $total_amount, $tickets_path));
-            //sending mail to the organizer
-            Mail::to($event->user->email)->send(new NewTicketBuyed($event,$user, $tickets_buyed, $total_paid));
-        }catch(\Exception $e){
-            Log::error("ERROR :". $e->getMessage());
+        if($total_paid){
+            try{
+                //sending email to user with his tickets
+                Mail::to($user->email)->send(new SendTicket($user, $event, $total_amount, $tickets_path));
+                //sending mail to the organizer
+                Mail::to($event->user->email)->send(new NewTicketBuyed($event,$user, $tickets_buyed, $total_paid));
+            }catch(\Exception $e){
+                Log::error("ERROR :". $e->getMessage());
+            }
+          
+            return back()->with('toast', [
+                'type' => 'success',
+                'message' => "Achat de billets effectué avec succès.\n Consultez votre boîte mail pour télécharger votre billet ou visitez votre <a href='". route('dashboard')."' class='underline'>tableau de bord</a>"
+            ]);
         }
-      
         return back()->with('toast', [
-            'type' => 'success',
-            'message' => "Achat de billets effectué avec succès.\n Consultez votre boîte mail pour télécharger votre billet ou visitez votre <a href='". route('dashboard')."' class='underline'>tableau de bord</a>"
-        ]);
+                'type' => 'fail',
+                'message' => "Echec de l'opération.\n Veuillez réessayer!"
+            ]);
     }
 
     public function status(string $ticket)
