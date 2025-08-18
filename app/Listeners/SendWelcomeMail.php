@@ -3,6 +3,7 @@
 namespace App\Listeners;
 
 use App\Mail\WelcomeUser;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,8 +32,7 @@ class SendWelcomeMail
         try{
             Mail::to($event->user->email)->send(new WelcomeUser($event->user, $event->user->hashPassword));
         }catch(\Exception $e){
-            echo "ERROR :". $e->getMessage();
-            sleep(3);
+           Log::error("ERROR :". $e->getMessage());
         }
     }
 }

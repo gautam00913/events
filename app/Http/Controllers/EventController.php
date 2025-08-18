@@ -11,6 +11,7 @@ use App\Pipes\Events\Search;
 use Illuminate\Http\Request;
 use Illuminate\Pipeline\Pipeline;
 use App\Http\Requests\EventRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use App\Pipes\Events\Event as EventPipe;
 
@@ -98,8 +99,7 @@ class EventController extends Controller
        try{
            Mail::to(config('mail.from.address'))->send(new NewEventAdded($event, $user));
        }catch(\Exception $e){
-        echo "ERROR :". $e->getMessage();
-        sleep(3);
+            Log::error("ERROR :". $e->getMessage());
        }
        
        return redirect()->route('events.index')->with('toast', [

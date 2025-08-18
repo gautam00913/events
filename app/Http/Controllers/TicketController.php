@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\NewTicketBuyed;
 use App\Models\Event;
 use App\Models\Ticket;
 use App\Mail\SendTicket;
-use App\Services\PdfGenerator;
+use App\Mail\NewTicketBuyed;
 use Illuminate\Http\Request;
+use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class TicketController extends Controller
@@ -96,8 +97,7 @@ class TicketController extends Controller
             //sending mail to the organizer
             Mail::to($event->user->email)->send(new NewTicketBuyed($event,$user, $tickets_buyed, $total_paid));
         }catch(\Exception $e){
-            echo "ERROR :". $e->getMessage();
-            sleep(3);
+            Log::error("ERROR :". $e->getMessage());
         }
       
         return back()->with('toast', [

@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Mail\NotifyPaymentRequest;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 
@@ -29,8 +30,7 @@ class TransactionController extends Controller
             //send mail to admin that the organizer want get his money
             Mail::to(config('mail.from.address'))->send(new NotifyPaymentRequest(auth()->user(), $transaction));
         }catch(\Exception $e){
-            echo "ERROR :". $e->getMessage();
-            sleep(3);
+            Log::error("ERROR :". $e->getMessage());
         }
 
         $request->session()->flash('toast', [
