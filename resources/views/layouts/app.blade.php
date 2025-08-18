@@ -274,11 +274,27 @@
                                 error.textContent =''
                             }, 3000);
                         } else {
+                            let email = "";
+                            let lastname = "";
+                            let firstname = "";
+                            let user = @json(auth()->user() ?? []);
+                            if(user){
+                                email = user.email
+                                let tab = user.name.split(' ');
+                                lastname = tab[0] ?? "";
+                                tab.shift();
+                                firstname = tab.join(" ")
+                            }
                             let widget =  FedaPay.init({
                                 public_key: "{{ env('FEDAPAY_PUBLIC_KEY') }}",
                                 transaction:{
                                     amount: price,
                                     description: "Achat de billets pour l'évènement "+ event_name
+                                },
+                                 customer: {
+                                    email: email,
+                                    lastname: lastname,
+                                    firstname: firstname,
                                 },
                                 onComplete: function(data){
                                     if(data.reason === "CHECKOUT COMPLETE" && data.transaction.status === 'approved'){

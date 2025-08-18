@@ -66,13 +66,14 @@ class TicketController extends Controller
             $total_amount = $ticket->pivot->price * $place;
             $user = auth()->user();
             try{
-                $done = $user->participations()->attach($event->id, [
+                $user->participations()->attach($event->id, [
                     'event_ticket_id' => $ticket->pivot->id,
                     'number_place' => $place,
                     'total_amount' => $total_amount,
                     'reserve_at' => $reserve_at,
                     'payment_id' => $request->payment_id
                 ]);
+                $done = true;
             }catch(\Exception $e){
                 Log::error("ERROR DURING PAYMENT SAVING :". $e->getMessage());
                 $done = false;
