@@ -15,6 +15,14 @@ class PdfGenerator
         $name = '00-'. $event->id. '-'.$ticket->id. '-'. $buyer_id;
         $qrcode = "qrcodes/qrc-{$name}.png";
         $ticket_name = "tickets/tk-{$name}.pdf";
+        $ticket_path= public_path().'/tickets/';
+        $qrcode_path= public_path().'/qrcodes/';
+        if (!file_exists($ticket_path)) {
+            mkdir($ticket_path, 0777, true);
+        }
+        if (!file_exists($qrcode_path)) {
+            mkdir($qrcode_path, 0777, true);
+        }
         QRCode::url(route('tickets.status', ['ticket' => 'tk-'. $name]))->setMargin(1)->setOutfile(public_path($qrcode))->png();
         $pdf = Pdf::loadView('tickets.pdf', [
             'qrcode' => $qrcode,
