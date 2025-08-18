@@ -28,6 +28,11 @@ class SendWelcomeMail
      */
     public function handle(Registered $event)
     {
-        Mail::to($event->user->email)->send(new WelcomeUser($event->user, $event->user->hashPassword));
+        try{
+            Mail::to($event->user->email)->send(new WelcomeUser($event->user, $event->user->hashPassword));
+        }catch(\Exception $e){
+            echo "ERROR :". $e->getMessage();
+            sleep(3);
+        }
     }
 }
