@@ -277,7 +277,7 @@
                             let email = "";
                             let lastname = "";
                             let firstname = "";
-                            let user = @json(auth()->user() ?? []);
+                            let user = @json(auth()->user() ?? null);
                             if(user){
                                 email = user.email
                                 let tab = user.name.split(' ');

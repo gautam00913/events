@@ -2,12 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Mail\WelcomeUser;
+use App\Events\TicketScanned;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Auth\Events\Registered;
+use App\Mail\TicketScannedNotification;
 
-class SendWelcomeMail
+class SendTicketScannedNotification
 {
     /**
      * Create the event listener.
@@ -22,13 +22,13 @@ class SendWelcomeMail
     /**
      * Handle the event.
      *
-     * @param  \App\Events\Registered  $event
+     * @param  \App\Events\TicketScanned  $event
      * @return void
      */
-    public function handle(Registered $event)
+    public function handle(TicketScanned $event)
     {
         try{
-            Mail::to($event->user->email)->send(new WelcomeUser($event->user, $event->user->hashPassword));
+            Mail::to($event->buyer->email)->send(new TicketScannedNotification($event->event, $event->ticket, $event->buyer, $event->scanned_at));
         }catch(\Exception $e){
            Log::error("ERROR :". $e->getMessage());
         }

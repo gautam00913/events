@@ -59,7 +59,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Event::class)
                     ->using(EventUser::class)
                     ->withPivot(['event_ticket_id', 'number_place', 'total_amount',
-                    'reserve_at', 'payment_id', 'scanned'])
+                    'reserve_at', 'payment_id', 'scanned', 'scanned_at'])
                     ->orderByPivot('reserve_at', 'DESC');
     }
 

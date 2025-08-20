@@ -38,6 +38,12 @@
                                     <span class="italic text-white px-3 py-1 bg-red-500 rounded">Non valide !</span>
                                 @endif
                             </p>
+                            @if ($buyer->pivot->scanned == 1 && $buyer->pivot->scanned_at)
+                                <p class="mb-3">
+                                    <span class="font-bold underline text-xl mr-3">Date de scannage :</span>
+                                    <span class="italic">{{ $buyer->pivot->scanned_at->format('d/m/Y H:i') }}</span>
+                                </p>
+                            @endif
                             <p class="mb-3">
                                 <span class="font-bold underline text-xl mr-3">Nombre de place :</span>
                                 <span class="italic">{{ $buyer->pivot->number_place }}</span>

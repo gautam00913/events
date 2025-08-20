@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\TicketScanned;
+use App\Listeners\SendTicketScannedNotification;
 use App\Listeners\SendWelcomeMail;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -19,6 +21,9 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
             SendWelcomeMail::class,
+        ],
+        TicketScanned::class => [
+            SendTicketScannedNotification::class
         ],
     ];
 

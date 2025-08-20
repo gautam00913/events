@@ -8,9 +8,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 class EventUser extends Pivot
 {
     public $casts = [
-        'reserve_at' => 'datetime'
+        'reserve_at' => 'datetime',
+        'scanned_at' => 'datetime',
     ];
-    protected $fillable = ['event_ticket_id', 'number_place', 'total_amount', 'reserve_at', 'payment_id', 'scanned'];
+    protected $fillable = ['event_ticket_id', 'number_place', 'total_amount', 'reserve_at', 'payment_id', 'scanned', 'scanned_at'];
 
     public function getTicketAttribute()
     {

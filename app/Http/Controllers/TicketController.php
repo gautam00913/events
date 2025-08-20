@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use App\Mail\SendTicket;
 use App\Mail\NewTicketBuyed;
 use Illuminate\Http\Request;
+use App\Events\TicketScanned;
 use App\Services\PdfGenerator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -103,6 +104,10 @@ class TicketController extends Controller
             try{
                 //sending email to user with his tickets
                 Mail::to($user->email)->send(new SendTicket($user, $event, $total_amount, $tickets_path));
+            }catch(\Exception $e){
+                Log::error("ERROR :". $e->getMessage());
+            }
+            try{
                 //sending mail to the organizer
                 Mail::to($event->user->email)->send(new NewTicketBuyed($event,$user, $tickets_buyed, $total_paid));
             }catch(\Exception $e){
@@ -133,10 +138,13 @@ class TicketController extends Controller
         
         if($buyer->pivot->ticket === $ticket->id)
         {
+            $scanned_at = now();
             //change status to scanned and confirm validity of the ticket
             $buyer->participations()->updateExistingPivot($event->id, [
-                'scanned' => 1
+                'scanned' => 1,
+                'scanned_at' => $scanned_at,
             ]);
+            event(new TicketScanned($event, $ticket, $buyer, $scanned_at->format('d/m/Y \à H:i')));
         }
         return view('tickets.status', compact('event', 'ticket', 'buyer'));
     }

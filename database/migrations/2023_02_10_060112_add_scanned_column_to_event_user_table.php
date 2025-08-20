@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::table('event_user', function (Blueprint $table) {
             $table->boolean('scanned')->default(false);
+            $table->timestamp('scanned_at')->nullable();
         });
     }
 
@@ -26,7 +27,7 @@ return new class extends Migration
     public function down()
     {
         Schema::table('event_user', function (Blueprint $table) {
-            $table->dropColumn('scanned');
+            $table->dropColumn(['scanned', 'scanned_at']);
         });
     }
 };

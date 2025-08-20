@@ -33,16 +33,18 @@ class Event extends Model
 
     public function participants(): BelongsToMany
     {
-        return $this->belongsToMany(User::class)->using(EventUser::class)->withPivot(['event_ticket_id', 'number_place', 'total_amount', 'reserve_at', 'payment_id', 'scanned']);
+        return $this->belongsToMany(User::class)->using(EventUser::class)->withPivot(['event_ticket_id', 'number_place', 'total_amount', 
+                                                                                    'reserve_at', 'payment_id', 'scanned', 'scanned_at']);
     }
 
     public function getFormatTagsAttribute()
     {
         $tags='';
         $event_tags = $this->tags()->get();
+        $event_tags_count = $event_tags->count();
         foreach ($event_tags as $key => $tag) {
             $tags .= $tag->name;
-            if($event_tags->count() > ($key +1)) $tags .= ', ';
+            if($event_tags_count > ($key +1)) $tags .= ', ';
         }
         return $tags;
     }
