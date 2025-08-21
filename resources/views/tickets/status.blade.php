@@ -10,7 +10,7 @@
   <div>
         <div class="max-w-7xl md:max-w-6xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg py-3">
-                @if ($buyer->pivot->ticket === $ticket->id)
+                @if ($buyer_ticket->id === $ticket->id)
                     <div class="flex flex-col md:flex-row md:space-x-3 space-y-3 md:space-y-0 ">
                         <div class="h-40 w-40 mx-auto p-1 md:p-0 md:m-0 md:border-0 border border-purple-600 rounded-full md:h-auto md:w-1/3 md:rounded-none">
                             @if ($buyer->image)

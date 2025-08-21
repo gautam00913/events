@@ -135,8 +135,9 @@ class TicketController extends Controller
         $buyer = $event->participants->where('id', $tab[4])->first();
         $ticket = $event->tickets->where('id', $tab[3])->first();
         if(!$buyer || !$ticket) return abort(404);
+        $buyer_ticket = $buyer->pivot->ticket;
         
-        if($buyer->pivot->ticket === $ticket->id)
+        if(!$buyer->pivot->scanned && $buyer_ticket->id === $ticket->id)
         {
             $scanned_at = now();
             //change status to scanned and confirm validity of the ticket
@@ -146,7 +147,7 @@ class TicketController extends Controller
             ]);
             event(new TicketScanned($event, $ticket, $buyer, $scanned_at->format('d/m/Y \à H:i')));
         }
-        return view('tickets.status', compact('event', 'ticket', 'buyer'));
+        return view('tickets.status', compact('event', 'ticket', 'buyer', 'buyer_ticket'));
     }
 
     public function download(PdfGenerator $pdfGenerator, string $ticket)

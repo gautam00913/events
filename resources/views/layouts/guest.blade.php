@@ -19,5 +19,38 @@
             {{ $slot }}
         </div>
         <x-footer></x-footer>
+
+        <script>
+            let togglePassword = document.getElementById('togglePassword');
+            let togglePasswordConfirmation = document.getElementById('togglePasswordConfirmation');
+            if(togglePassword){
+                togglePassword.addEventListener('click', function(){
+                    let password = document.getElementById('password');
+                    if(password.getAttribute('type') == "password"){
+                        password.setAttribute('type', 'text');
+                        document.getElementById('eye-slash').classList.remove('hidden');
+                        document.getElementById('eye-open').classList.add('hidden');
+                    }else{
+                        password.setAttribute('type', 'password');
+                        document.getElementById('eye-open').classList.remove('hidden');
+                        document.getElementById('eye-slash').classList.add('hidden');
+                    }
+                })
+            }
+            if(togglePasswordConfirmation){
+                togglePasswordConfirmation.addEventListener('click', function(){
+                    let password_confirmation = document.getElementById('password_confirmation');
+                    if(password_confirmation.getAttribute('type') == "password"){
+                        password_confirmation.setAttribute('type', 'text');
+                        document.getElementById('confirmation-eye-slash').classList.remove('hidden');
+                        document.getElementById('confirmation-eye-open').classList.add('hidden');
+                    }else{
+                        password_confirmation.setAttribute('type', 'password');
+                        document.getElementById('confirmation-eye-open').classList.remove('hidden');
+                        document.getElementById('confirmation-eye-slash').classList.add('hidden');
+                    }
+                })
+            }
+        </script>
     </body>
 </html>

@@ -2,7 +2,7 @@
 ## Bonjour cher/ chère {{ $buyer->name }}
 
 
-**{{ $event->user->name }}** vient de scanner votre billet
+**{{ $event->user->name }}** vient de scanner votre billet **{{ $ticket->name }}**
 de l'évènement **[{{ $event->title }}]({{ route('events.index'). '?event='. $event->id }})**
 le **{{ $scanned_at }}**.
 

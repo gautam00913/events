@@ -35,6 +35,6 @@ class TicketScannedNotification extends Mailable
     public function build()
     {
         return $this->markdown('emails.ticket-scanned')
-                    ->subject("{$this->event->name} : Confirmation de scannage de votre billet éléctronique");
+                    ->subject("{$this->event->title} : Confirmation de scannage de votre billet éléctronique");
     }
 }
